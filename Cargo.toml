@@ -49,11 +49,17 @@ bevy = { version = "0.11.1", default-features = false, features = [
 bevy_kira_audio = { version = "0.16" }
 bevy_asset_loader = { version = "0.17" }
 rand = { version = "0.8.3" }
+serde = "1.0.183"
+toml = "0.7.1"
+bevy_egui = "0.21.0"
+egui_dock = "0.6.3"
 
 # keep the following in sync with Bevy's dependencies
 winit = { version = "0.28", default-features = false }
 image = { version = "0.24", default-features = false }
 bevy-inspector-egui = "0.19.0"
+anyhow = "1.0.74"
+thiserror = "1.0.46"
 
 [build-dependencies]
 embed-resource = "1.4"

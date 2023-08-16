@@ -1,12 +1,12 @@
 #![allow(clippy::type_complexity)]
 
 mod actions;
+mod config;
 mod loading;
 mod menu;
-
-use crate::actions::ActionsPlugin;
-use crate::loading::LoadingPlugin;
-use crate::menu::MenuPlugin;
+mod simulation;
+mod toml_asset;
+mod ui;
 
 use bevy::app::App;
 #[cfg(debug_assertions)]
@@ -14,6 +14,14 @@ use bevy::diagnostic::{FrameTimeDiagnosticsPlugin, LogDiagnosticsPlugin};
 use bevy::prelude::*;
 #[cfg(debug_assertions)]
 use bevy_inspector_egui::quick::WorldInspectorPlugin;
+
+use crate::actions::ActionsPlugin;
+use crate::config::ConfigPlugin;
+use crate::loading::LoadingPlugin;
+use crate::menu::MenuPlugin;
+use crate::simulation::SimulationPlugin;
+use crate::toml_asset::TomlAssetPlugin;
+use crate::ui::UiPlugin;
 
 // This example game uses States to separate logic
 // See https://bevy-cheatbook.github.io/programming/states.html
@@ -35,15 +43,19 @@ impl Plugin for GamePlugin {
     fn build(&self, app: &mut App) {
         app.add_state::<GameState>().add_plugins((
             LoadingPlugin,
+            ConfigPlugin,
             MenuPlugin,
             ActionsPlugin,
+            TomlAssetPlugin,
+            SimulationPlugin,
+            UiPlugin,
         ));
 
         #[cfg(debug_assertions)]
         {
             app.add_plugins((
                 FrameTimeDiagnosticsPlugin,
-                LogDiagnosticsPlugin::default(),
+                LogDiagnosticsPlugin::filtered(vec![FrameTimeDiagnosticsPlugin::FPS]),
                 WorldInspectorPlugin::default(),
             ));
         }
