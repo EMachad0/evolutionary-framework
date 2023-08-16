@@ -1,21 +1,19 @@
 #![allow(clippy::type_complexity)]
 
 mod actions;
-mod audio;
 mod loading;
 mod menu;
-mod player;
 
 use crate::actions::ActionsPlugin;
-use crate::audio::InternalAudioPlugin;
 use crate::loading::LoadingPlugin;
 use crate::menu::MenuPlugin;
-use crate::player::PlayerPlugin;
 
 use bevy::app::App;
 #[cfg(debug_assertions)]
 use bevy::diagnostic::{FrameTimeDiagnosticsPlugin, LogDiagnosticsPlugin};
 use bevy::prelude::*;
+#[cfg(debug_assertions)]
+use bevy_inspector_egui::quick::WorldInspectorPlugin;
 
 // This example game uses States to separate logic
 // See https://bevy-cheatbook.github.io/programming/states.html
@@ -39,13 +37,15 @@ impl Plugin for GamePlugin {
             LoadingPlugin,
             MenuPlugin,
             ActionsPlugin,
-            InternalAudioPlugin,
-            PlayerPlugin,
         ));
 
         #[cfg(debug_assertions)]
         {
-            app.add_plugins((FrameTimeDiagnosticsPlugin, LogDiagnosticsPlugin::default()));
+            app.add_plugins((
+                FrameTimeDiagnosticsPlugin,
+                LogDiagnosticsPlugin::default(),
+                WorldInspectorPlugin::default(),
+            ));
         }
     }
 }
