@@ -1,6 +1,6 @@
 [population]
 dim = 10
-pop_size = 10
+size = 10
 
 [population.cod]
 # one of ["Bool", "Int", "Perm", "Real"]

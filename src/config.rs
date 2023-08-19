@@ -5,24 +5,28 @@ use serde::{Deserialize, Serialize};
 use crate::toml_asset::TomlAsset;
 use crate::GameState;
 
-#[derive(Default, Debug, PartialEq, Serialize, Deserialize, Reflect)]
+#[derive(Default, Debug, Copy, Clone, PartialEq, Serialize, Deserialize, Reflect)]
 #[serde(tag = "type", content = "args")]
 pub enum PopulationGenInfo {
     #[default]
     Bool,
-    Int { range: (i32, i32) },
+    Int {
+        range: (i32, i32),
+    },
     Perm,
-    Real { range: (f64, f64) },
+    Real {
+        range: (f64, f64),
+    },
 }
 
-#[derive(Default, Debug, Serialize, Deserialize, Reflect)]
+#[derive(Default, Debug, Copy, Clone, Serialize, Deserialize, Reflect)]
 pub struct PopulationConfig {
     pub dim: usize,
-    pub pop_size: usize,
+    pub size: usize,
     pub cod: PopulationGenInfo,
 }
 
-#[derive(Default, Debug, Deserialize, Resource, Reflect)]
+#[derive(Default, Debug, Copy, Clone, Deserialize, Resource, Reflect)]
 #[reflect(Resource)]
 pub struct Config {
     pub population: PopulationConfig,

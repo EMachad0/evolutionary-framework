@@ -1,10 +1,10 @@
 pub mod genes;
+pub mod init_params;
 
 use bevy::prelude::*;
+use bevy::sprite::Material2d;
 use genes::Gene;
-
-use crate::config::{Config, PopulationGenInfo};
-use genes::{Bool, Int, Perm, Real};
+use init_params::PopulationInitParams;
 
 #[derive(Debug, Clone, Component, Reflect)]
 pub struct Individual<G: Gene>(pub Vec<G>);
@@ -19,39 +19,19 @@ impl<G: Gene> Individual<G> {
     }
 }
 
-pub fn create_population<G: Gene>(size: usize, dim: usize, i: G::I) -> Vec<Individual<G>> {
-    let mut population = Vec::with_capacity(size);
-    for _ in 0..size {
-        let individual: Individual<G> = Individual::new(dim, &i);
-        population.push(individual);
-    }
-    population
-}
+pub fn spawn_population<G>(mut commands: Commands, population_cod: Res<PopulationInitParams<G>>)
+where
+    G: 'static + Send + Sync + Gene,
+{
+    let PopulationInitParams { size, dim, arg } = *population_cod;
 
-pub fn spawn_population(mut commands: Commands, config: Res<Config>) {
-    let pop_size = config.population.pop_size;
-    let pop_dim = config.population.dim;
-    let names = (0..pop_size).map(|i| Name::new(format!("Individual {}", i)));
-    match config.population.cod {
-        PopulationGenInfo::Bool => {
-            let population = create_population::<Bool>(pop_size, pop_dim, ());
-            let entities = population.into_iter().zip(names);
-            commands.spawn_batch(entities);
-        }
-        PopulationGenInfo::Int { range } => {
-            let population = create_population::<Int>(pop_size, pop_dim, range);
-            let entities = population.into_iter().zip(names);
-            commands.spawn_batch(entities);
-        }
-        PopulationGenInfo::Perm => {
-            let population = create_population::<Perm>(pop_size, 1, pop_dim as i32);
-            let entities = population.into_iter().zip(names);
-            commands.spawn_batch(entities);
-        }
-        PopulationGenInfo::Real { range } => {
-            let population = create_population::<Real>(pop_size, pop_dim, range);
-            let entities = population.into_iter().zip(names);
-            commands.spawn_batch(entities);
-        }
-    }
+    let population = (0..size)
+        .map(|i| {
+            let name = Name::new(format!("Individual {}", i));
+            let individual = Individual::<G>::new(dim, &arg);
+            (name, individual)
+        })
+        .collect::<Vec<_>>();
+
+    commands.spawn_batch(population);
 }

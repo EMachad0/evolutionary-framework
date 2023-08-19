@@ -8,8 +8,10 @@ pub use int_gene::Int;
 pub use perm_gene::Perm;
 pub use real_gene::Real;
 
+use std::fmt::Debug;
+
 pub trait Gene {
-    type I;
+    type I: Debug + Default + Copy + Clone + Send + Sync;
     type V;
 
     fn new(input: &Self::I) -> Self;
