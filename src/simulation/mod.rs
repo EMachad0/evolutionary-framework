@@ -1,4 +1,4 @@
-mod population;
+pub mod population;
 
 use bevy::prelude::*;
 

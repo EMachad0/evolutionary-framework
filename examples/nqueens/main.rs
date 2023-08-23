@@ -3,6 +3,9 @@
 
 mod board;
 mod board_position;
+mod fitness;
+mod queen;
+mod selected_individual;
 
 use bevy::prelude::*;
 use bevy::DefaultPlugins;
@@ -16,6 +19,7 @@ fn main() {
         .insert_resource(ClearColor(
             Color::hex("80CEE1").expect("Unable to parse clear color hex"),
         ))
+        .init_resource::<selected_individual::SelectedIndividual>()
         .add_plugins(DefaultPlugins.set(WindowPlugin {
             primary_window: Some(Window {
                 title: "Evolutionary Framework NQueens".to_string(),
@@ -31,12 +35,26 @@ fn main() {
         .add_plugins(EvolutionaryFrameworkPlugin)
         .register_type::<board_position::BoardPosition>()
         .add_systems(Startup, set_window_icon)
-        .add_systems(OnEnter(GameState::Playing), board::spawn_board)
+        .add_systems(
+            OnEnter(GameState::Playing),
+            (
+                (
+                    board::spawn_board,
+                    (board::spawn_board_cells, queen::spawn_queens),
+                )
+                    .chain(),
+                fitness::spawn_fitness_text,
+            ),
+        )
         .add_systems(
             PreUpdate,
             (
                 board_position::transform_from_board_position,
                 board::update_board_if_window_resize,
+                selected_individual::select_individual_from_kb,
+                queen::queens_from_selected_individual,
+                fitness::calc_fitness,
+                fitness::update_fitness_ui,
             )
                 .run_if(in_state(GameState::Playing)),
         )

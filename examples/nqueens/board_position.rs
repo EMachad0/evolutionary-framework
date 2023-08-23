@@ -14,9 +14,10 @@ pub fn transform_from_board_position(
 ) {
     for (mut transform, board_position) in query.iter_mut() {
         let BoardPosition { x, y } = board_position;
+        let z = transform.translation.z;
         transform.translation = Vec3::from((
             board.rect.min + Vec2::new(board.cell_size * *x as f32, board.cell_size * *y as f32),
-            0.,
+            z,
         ));
     }
 }
