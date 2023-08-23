@@ -1,12 +1,13 @@
 #![allow(clippy::type_complexity)]
 
-mod actions;
-mod config;
-mod loading;
-mod menu;
-mod simulation;
-mod toml_asset;
-mod ui;
+pub mod actions;
+pub mod config;
+pub mod loading;
+pub mod menu;
+pub mod simulation;
+pub mod toml_asset;
+pub mod ui;
+pub mod window;
 
 use bevy::app::App;
 #[cfg(debug_assertions)]
@@ -27,7 +28,7 @@ use crate::ui::UiPlugin;
 // See https://bevy-cheatbook.github.io/programming/states.html
 // Or https://github.com/bevyengine/bevy/blob/main/examples/ecs/state.rs
 #[derive(States, Default, Clone, Eq, PartialEq, Debug, Hash)]
-enum GameState {
+pub enum GameState {
     // During the loading State the LoadingPlugin will load our assets
     #[default]
     Loading,
@@ -37,9 +38,9 @@ enum GameState {
     Menu,
 }
 
-pub struct GamePlugin;
+pub struct EvolutionaryFrameworkPlugin;
 
-impl Plugin for GamePlugin {
+impl Plugin for EvolutionaryFrameworkPlugin {
     fn build(&self, app: &mut App) {
         app.add_state::<GameState>().add_plugins((
             LoadingPlugin,

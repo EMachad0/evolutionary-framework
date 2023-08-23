@@ -2,7 +2,6 @@ pub mod genes;
 pub mod init_params;
 
 use bevy::prelude::*;
-use bevy::sprite::Material2d;
 use genes::Gene;
 use init_params::PopulationInitParams;
 

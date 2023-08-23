@@ -9,8 +9,8 @@ impl Plugin for CameraPlugin {
 }
 
 #[derive(Default, Component)]
-pub struct UiCamera;
+pub struct MainCamera;
 
 fn setup_camera(mut commands: Commands) {
-    commands.spawn((Camera2dBundle::default(), UiCamera));
+    commands.spawn((Camera2dBundle::default(), MainCamera));
 }

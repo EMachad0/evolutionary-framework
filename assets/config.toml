@@ -1,8 +1,8 @@
 [population]
-dim = 10
+dim = 8
 size = 10
 
 [population.cod]
 # one of ["Bool", "Int", "Perm", "Real"]
-type = "Real"
-args = { range=[1, 10] }
+type = "Perm"
+#args = { range=[1, 10] }
