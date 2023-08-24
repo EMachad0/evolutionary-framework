@@ -1,16 +1,16 @@
 use bevy::prelude::*;
 
 use crate::config::{Config, PopulationConfig, PopulationGenInfo};
-use crate::simulation::population::genes::{Bool, Gene, Int, Perm, Real};
+use crate::simulation::population::genes::{Bool, GeneCod, Int, Perm, Real};
 
 #[derive(Default, Debug, Copy, Clone, Resource)]
-pub struct PopulationInitParams<G: Gene> {
+pub struct PopulationInitParams<G: GeneCod> {
     pub size: usize,
     pub dim: usize,
     pub arg: G::I,
 }
 
-impl<G: Gene> PopulationInitParams<G> {
+impl<G: GeneCod> PopulationInitParams<G> {
     pub fn new(size: usize, dim: usize, arg: G::I) -> Self {
         Self { size, dim, arg }
     }
@@ -27,7 +27,7 @@ pub fn insert_population_init_params(world: &mut World) {
             world.insert_resource(PopulationInitParams::<Int>::new(size, dim, range));
         }
         PopulationGenInfo::Perm => {
-            world.insert_resource(PopulationInitParams::<Perm>::new(size, 1, dim as i32));
+            world.insert_resource(PopulationInitParams::<Perm>::new(size, dim, ()));
         }
         PopulationGenInfo::Real { range } => {
             world.insert_resource(PopulationInitParams::<Real>::new(size, dim, range));

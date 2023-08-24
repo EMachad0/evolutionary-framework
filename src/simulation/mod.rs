@@ -5,17 +5,21 @@ use bevy::prelude::*;
 use population::genes::{Bool, Int, Perm, Real};
 use population::init_params::PopulationInitParams;
 
-use crate::simulation::population::Individual;
+use crate::simulation::population::fitness::Fitness;
+use crate::simulation::population::genes::Gene;
+use crate::simulation::population::individual::Individual;
 use crate::GameState;
 
 pub struct SimulationPlugin;
 
 impl Plugin for SimulationPlugin {
     fn build(&self, app: &mut App) {
-        app.register_type::<Individual<Bool>>()
-            .register_type::<Individual<Int>>()
-            .register_type::<Individual<Perm>>()
-            .register_type::<Individual<Real>>()
+        app.register_type::<Gene<Bool>>()
+            .register_type::<Gene<Int>>()
+            .register_type::<Gene<Perm>>()
+            .register_type::<Gene<Real>>()
+            .register_type::<Individual>()
+            .register_type::<Fitness>()
             .add_systems(
                 OnEnter(GameState::Playing),
                 (

@@ -1,8 +1,7 @@
-use bevy::{
-    app::{App, Plugin},
-    asset::{AddAsset, AssetLoader, BoxedFuture, Error, LoadContext, LoadedAsset},
-    reflect::{TypePath, TypeUuid},
-};
+use bevy::asset::{AssetLoader, LoadContext, LoadedAsset};
+use bevy::prelude::*;
+use bevy::reflect::{TypePath, TypeUuid};
+use bevy::utils::BoxedFuture;
 use serde::Deserialize;
 
 pub struct TomlAssetPlugin;
@@ -26,7 +25,7 @@ impl AssetLoader for TomlAssetLoader {
         &'a self,
         bytes: &'a [u8],
         load_context: &'a mut LoadContext,
-    ) -> BoxedFuture<'a, anyhow::Result<(), Error>> {
+    ) -> BoxedFuture<'a, anyhow::Result<(), anyhow::Error>> {
         Box::pin(async move {
             let data_str = std::str::from_utf8(bytes)?;
             let asset = TomlAsset(data_str.into());

@@ -1,34 +1,27 @@
+pub mod fitness;
 pub mod genes;
+pub mod individual;
 pub mod init_params;
 
+use crate::simulation::population::fitness::Fitness;
 use bevy::prelude::*;
-use genes::Gene;
-use init_params::PopulationInitParams;
 
-#[derive(Debug, Clone, Component, Reflect)]
-pub struct Individual<G: Gene>(pub Vec<G>);
-
-impl<G: Gene> Individual<G> {
-    pub fn new(dim: usize, i: &G::I) -> Self {
-        let mut genes = Vec::with_capacity(dim);
-        for _ in 0..dim {
-            genes.push(G::new(i));
-        }
-        Self(genes)
-    }
-}
+use crate::simulation::population::genes::Gene;
+use crate::simulation::population::genes::GeneCod;
+use crate::simulation::population::individual::Individual;
+use crate::simulation::population::init_params::PopulationInitParams;
 
 pub fn spawn_population<G>(mut commands: Commands, population_cod: Res<PopulationInitParams<G>>)
 where
-    G: 'static + Send + Sync + Gene,
+    G: 'static + Send + Sync + GeneCod,
 {
     let PopulationInitParams { size, dim, arg } = *population_cod;
 
     let population = (0..size)
         .map(|i| {
             let name = Name::new(format!("Individual {}", i));
-            let individual = Individual::<G>::new(dim, &arg);
-            (name, individual)
+            let gene = Gene::from(G::new(dim, &arg));
+            (name, gene, Fitness::default(), Individual)
         })
         .collect::<Vec<_>>();
 

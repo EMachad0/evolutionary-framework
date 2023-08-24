@@ -7,11 +7,12 @@ use bevy_inspector_egui::{
     DefaultInspectorConfigPlugin,
 };
 use egui_dock::{DockArea, NodeIndex, Style, TabBarStyle, Tree};
+use itertools::Itertools;
 
 use crate::camera::MainCamera;
-use crate::simulation::population::genes::{Bool, Gene, Int, Perm, Real};
-use crate::simulation::population::Individual;
-use crate::ui::config::SelectionMode;
+use crate::simulation::population::fitness::Fitness;
+use crate::ui::selected_individuals::SelectedIndividuals;
+use crate::ui::ui_config::SelectionMode;
 use crate::GameState;
 
 const TAB_BAR_HEIGHT: f32 = 20.;
@@ -29,7 +30,7 @@ impl Plugin for InspectorPlugin {
                     show_ui_system
                         .before(EguiSet::ProcessOutput)
                         .before(bevy::transform::TransformSystem::TransformPropagate),
-                    set_camera_viewport
+                    (set_camera_viewport, sync_ui_selected_individuals)
                         .after(show_ui_system)
                         .run_if(resource_changed::<TabUiState>()),
                 )
@@ -129,14 +130,16 @@ fn ui_for_individuals(
     selected_entities: &mut SelectedEntities,
 ) {
     world
-        .query::<(Entity, &Name, &Individual<Perm>)>()
+        .query::<(Entity, &Name, &Fitness)>()
         .iter(world)
-        .for_each(|(entity, name, individual)| {
+        .sorted_by(|(_, _, f1), (_, _, f2)| f1.get().partial_cmp(&f2.get()).unwrap().reverse())
+        .for_each(|(entity, name, fitness)| {
+            let text = format!("{} ({:.2})", name, fitness.get());
             if ui
-                .selectable_label(selected_entities.contains(entity), name.as_str())
+                .selectable_label(selected_entities.contains(entity), text)
                 .clicked()
             {
-                let ui_config = world.resource::<crate::ui::config::UiConfig>();
+                let ui_config = world.resource::<crate::ui::ui_config::UiConfig>();
                 match ui_config.selection_mode {
                     SelectionMode::Single => selected_entities.select_replace(entity),
                     SelectionMode::Many => selected_entities.select_maybe_add(entity, true),
@@ -180,4 +183,12 @@ fn set_camera_viewport(
         physical_size: UVec2::new(viewport_size.x as u32, viewport_size.y as u32),
         depth: 0.0..1.0,
     });
+}
+
+fn sync_ui_selected_individuals(
+    ui_state: Res<TabUiState>,
+    mut selection: ResMut<SelectedIndividuals>,
+) {
+    let selected = ui_state.selected_entities.iter().collect::<Vec<_>>();
+    *selection.get_mut() = selected;
 }

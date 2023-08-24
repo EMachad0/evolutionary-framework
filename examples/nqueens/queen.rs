@@ -1,11 +1,10 @@
 use bevy::prelude::*;
 use bevy::sprite::Anchor;
-use evolutionary_framework::simulation::population::genes::{Gene, Perm};
-use evolutionary_framework::simulation::population::Individual;
 
 use crate::board::Board;
 use crate::board_position::BoardPosition;
-use evolutionary_framework::selected_individual::SelectedIndividuals;
+use evolutionary_framework::simulation::population::genes::{Gene, GeneCod, Perm};
+use evolutionary_framework::ui::selected_individuals::SelectedIndividuals;
 
 #[derive(Debug, Component, Reflect)]
 pub struct Queen;
@@ -34,12 +33,12 @@ pub fn spawn_queens(mut commands: Commands, board: Res<Board>, asset_server: Res
 
 pub fn queens_from_selected_individual(
     mut queens: Query<&mut BoardPosition, With<Queen>>,
-    individuals: Query<&Individual<Perm>>,
+    individuals: Query<&Gene<Perm>>,
     selected: Res<SelectedIndividuals>,
 ) {
-    if let Some(entity) = selected.0 {
+    if let Some(entity) = selected.single() {
         let individual = individuals.get(entity).unwrap();
-        let perm = individual.0.first().unwrap().get();
+        let perm = individual.get().get();
 
         for ((x, y), mut board_position) in perm.iter().enumerate().zip(queens.iter_mut()) {
             *board_position = BoardPosition { x, y: *y as usize };
