@@ -1,6 +1,6 @@
 use bevy::prelude::*;
 
-use crate::selected_individual::SelectedIndividual;
+use evolutionary_framework::selected_individual::SelectedIndividuals;
 use evolutionary_framework::simulation::population::genes::{Gene, Perm};
 use evolutionary_framework::simulation::population::Individual;
 
@@ -33,7 +33,7 @@ pub struct FitnessUiText;
 pub fn spawn_fitness_text(mut commands: Commands, asset_server: Res<AssetServer>) {
     commands.spawn((
         TextBundle::from_section(
-            "hello\nbevy!",
+            "",
             TextStyle {
                 font: asset_server.load("fonts/FiraSans-Bold.ttf"),
                 font_size: 100.0,
@@ -54,7 +54,7 @@ pub fn spawn_fitness_text(mut commands: Commands, asset_server: Res<AssetServer>
 
 pub fn update_fitness_ui(
     mut query: Query<&mut Text, With<FitnessUiText>>,
-    selected: Res<SelectedIndividual>,
+    selected: Res<SelectedIndividuals>,
     individuals: Query<&Fitness, With<Individual<Perm>>>,
 ) {
     if let Some(entity) = selected.0 {

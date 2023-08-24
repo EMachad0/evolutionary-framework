@@ -1,13 +1,19 @@
+pub mod config;
+pub mod inspector;
+pub mod menu;
+
 use bevy::prelude::*;
 
-pub mod camera;
+use crate::ui::config::UiConfig;
 
-use camera::CameraPlugin;
-
-pub struct UiPlugin;
+#[derive(Debug, Default)]
+pub struct UiPlugin {
+    config: UiConfig,
+}
 
 impl Plugin for UiPlugin {
     fn build(&self, app: &mut App) {
-        app.add_plugins(CameraPlugin);
+        app.insert_resource(self.config)
+            .add_plugins((inspector::InspectorPlugin, menu::MenuPlugin));
     }
 }

@@ -1,9 +1,9 @@
 #![allow(clippy::type_complexity)]
 
-pub mod actions;
+pub mod camera;
 pub mod config;
 pub mod loading;
-pub mod menu;
+pub mod selected_individual;
 pub mod simulation;
 pub mod toml_asset;
 pub mod ui;
@@ -13,28 +13,12 @@ use bevy::app::App;
 #[cfg(debug_assertions)]
 use bevy::diagnostic::{FrameTimeDiagnosticsPlugin, LogDiagnosticsPlugin};
 use bevy::prelude::*;
-#[cfg(debug_assertions)]
-use bevy_inspector_egui::quick::WorldInspectorPlugin;
 
-use crate::actions::ActionsPlugin;
-use crate::config::ConfigPlugin;
-use crate::loading::LoadingPlugin;
-use crate::menu::MenuPlugin;
-use crate::simulation::SimulationPlugin;
-use crate::toml_asset::TomlAssetPlugin;
-use crate::ui::UiPlugin;
-
-// This example game uses States to separate logic
-// See https://bevy-cheatbook.github.io/programming/states.html
-// Or https://github.com/bevyengine/bevy/blob/main/examples/ecs/state.rs
 #[derive(States, Default, Clone, Eq, PartialEq, Debug, Hash)]
 pub enum GameState {
-    // During the loading State the LoadingPlugin will load our assets
     #[default]
     Loading,
-    // During this State the actual game logic is executed
     Playing,
-    // Here the menu is drawn and waiting for player interaction
     Menu,
 }
 
@@ -43,13 +27,12 @@ pub struct EvolutionaryFrameworkPlugin;
 impl Plugin for EvolutionaryFrameworkPlugin {
     fn build(&self, app: &mut App) {
         app.add_state::<GameState>().add_plugins((
-            LoadingPlugin,
-            ConfigPlugin,
-            MenuPlugin,
-            ActionsPlugin,
-            TomlAssetPlugin,
-            SimulationPlugin,
-            UiPlugin,
+            camera::CameraPlugin,
+            config::ConfigPlugin,
+            loading::LoadingPlugin,
+            simulation::SimulationPlugin,
+            toml_asset::TomlAssetPlugin,
+            ui::UiPlugin::default(),
         ));
 
         #[cfg(debug_assertions)]
@@ -57,7 +40,6 @@ impl Plugin for EvolutionaryFrameworkPlugin {
             app.add_plugins((
                 FrameTimeDiagnosticsPlugin,
                 LogDiagnosticsPlugin::filtered(vec![FrameTimeDiagnosticsPlugin::FPS]),
-                WorldInspectorPlugin::default(),
             ));
         }
     }

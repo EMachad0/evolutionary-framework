@@ -5,7 +5,7 @@ use evolutionary_framework::simulation::population::Individual;
 
 use crate::board::Board;
 use crate::board_position::BoardPosition;
-use crate::selected_individual::SelectedIndividual;
+use evolutionary_framework::selected_individual::SelectedIndividuals;
 
 #[derive(Debug, Component, Reflect)]
 pub struct Queen;
@@ -35,7 +35,7 @@ pub fn spawn_queens(mut commands: Commands, board: Res<Board>, asset_server: Res
 pub fn queens_from_selected_individual(
     mut queens: Query<&mut BoardPosition, With<Queen>>,
     individuals: Query<&Individual<Perm>>,
-    selected: Res<SelectedIndividual>,
+    selected: Res<SelectedIndividuals>,
 ) {
     if let Some(entity) = selected.0 {
         let individual = individuals.get(entity).unwrap();

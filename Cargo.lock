@@ -1666,6 +1666,7 @@ dependencies = [
  "bevy_asset_loader",
  "bevy_egui",
  "bevy_kira_audio",
+ "egui",
  "egui_dock",
  "embed-resource",
  "image",
