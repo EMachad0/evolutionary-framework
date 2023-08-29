@@ -1,5 +1,4 @@
 use bevy::prelude::*;
-use bevy_asset_loader::prelude::*;
 use serde::{Deserialize, Serialize};
 
 use crate::toml_asset::TomlAsset;
@@ -34,27 +33,25 @@ pub struct Config {
 
 pub struct ConfigPlugin;
 
+pub const CONFIG_SCHEDULE: OnExit<GameState> = OnExit(GameState::Loading);
+
 impl Plugin for ConfigPlugin {
     fn build(&self, app: &mut App) {
-        app.register_type::<Config>()
-            .add_collection_to_loading_state::<_, ConfigAssets>(GameState::Loading)
-            .add_systems(OnExit(GameState::Loading), parse_config);
+        app.register_type::<Config>();
     }
 }
 
-fn parse_config(
+pub trait ConfigToml {
+    fn handle(&self) -> &Handle<TomlAsset>;
+}
+
+pub fn parse_config<T: ConfigToml + Resource>(
     mut commands: Commands,
-    config_asset_handles: Res<ConfigAssets>,
+    config_toml: Res<T>,
     toml_assets: Res<Assets<TomlAsset>>,
 ) {
-    let handle = &config_asset_handles.config;
+    let handle = config_toml.handle();
     let content = toml_assets.get(handle).expect("Config Toml not loaded!");
     let config: Config = toml::from_str(&content.0).unwrap();
     commands.insert_resource(config);
-}
-
-#[derive(Resource, AssetCollection)]
-pub struct ConfigAssets {
-    #[asset(path = "config.toml")]
-    pub config: Handle<TomlAsset>,
 }

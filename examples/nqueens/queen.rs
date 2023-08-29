@@ -3,14 +3,14 @@ use bevy::sprite::Anchor;
 
 use crate::board::Board;
 use crate::board_position::BoardPosition;
+use crate::loading::textures::TextureAssets;
 use evolutionary_framework::simulation::population::genes::{Gene, GeneCod, Perm};
 use evolutionary_framework::ui::selected_individuals::SelectedIndividuals;
 
 #[derive(Debug, Component, Reflect)]
 pub struct Queen;
 
-pub fn spawn_queens(mut commands: Commands, board: Res<Board>, asset_server: Res<AssetServer>) {
-    let texture = asset_server.load("textures/crown.png");
+pub fn spawn_queens(mut commands: Commands, board: Res<Board>, textures: Res<TextureAssets>) {
     for i in 0..board.size {
         commands.spawn((
             SpriteBundle {
@@ -21,7 +21,7 @@ pub fn spawn_queens(mut commands: Commands, board: Res<Board>, asset_server: Res
                     ..default()
                 },
                 transform: Transform::from_xyz(0., 0., 1.),
-                texture: texture.clone(),
+                texture: textures.crown.clone(),
                 ..default()
             },
             BoardPosition { x: i, y: i },
@@ -37,7 +37,7 @@ pub fn queens_from_selected_individual(
     selected: Res<SelectedIndividuals>,
 ) {
     if let Some(entity) = selected.single() {
-        let individual = individuals.get(entity).unwrap();
+        let individual = individuals.get(*entity).unwrap();
         let perm = individual.get().get();
 
         for ((x, y), mut board_position) in perm.iter().enumerate().zip(queens.iter_mut()) {

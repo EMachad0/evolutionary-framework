@@ -36,7 +36,7 @@ pub fn spawn_individuals(
             .unwrap()
             .insert(MaterialMesh2dBundle {
                 mesh: meshes.add(shape::Circle::new(2.).into()).into(),
-                material: materials.add(ColorMaterial::from(Color::BLUE)),
+                material: materials.add(ColorMaterial::from(Color::ORANGE)),
                 transform: Transform::from_xyz(0., 0., 1.),
                 ..default()
             });

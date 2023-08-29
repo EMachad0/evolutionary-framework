@@ -3,6 +3,7 @@
 
 mod camera;
 mod cartesian_plane;
+mod config;
 mod fitness;
 mod function;
 mod individual;
@@ -36,6 +37,7 @@ fn main() {
             function::FunctionPlugin,
             individual::IndividualPlugin,
             fitness::FitnessPlugin,
+            config::ConfigPlugin,
         ))
         .add_systems(Startup, set_window_icon)
         .run();

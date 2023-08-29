@@ -1,4 +1,5 @@
 use bevy::prelude::*;
+use bevy::utils::HashSet;
 use rand::seq::IteratorRandom;
 use rand::thread_rng;
 
@@ -14,19 +15,30 @@ impl Plugin for SelectedIndividualsPlugin {
 
 #[derive(Default, Debug, Resource, Reflect)]
 #[reflect(Resource)]
-pub struct SelectedIndividuals(Vec<Entity>);
+pub struct SelectedIndividuals(HashSet<Entity>);
 
 impl SelectedIndividuals {
-    pub fn get(&self) -> &Vec<Entity> {
-        &self.0
+    pub fn iter(&self) -> impl Iterator<Item = &Entity> {
+        self.0.iter()
     }
 
-    pub fn single(&self) -> Option<Entity> {
-        self.0.first().copied()
+    pub fn single(&self) -> Option<&Entity> {
+        self.0.iter().next()
     }
 
-    pub fn get_mut(&mut self) -> &mut Vec<Entity> {
-        &mut self.0
+    pub fn contains(&self, entity: &Entity) -> bool {
+        self.0.contains(entity)
+    }
+
+    pub fn select(&mut self, entity: Entity) {
+        if !self.0.remove(&entity) {
+            self.0.insert(entity);
+        }
+    }
+
+    pub fn replace(&mut self, entity: Entity) {
+        self.0.clear();
+        self.0.insert(entity);
     }
 }
 
@@ -34,11 +46,10 @@ pub fn select_random_individual(
     mut selection: ResMut<SelectedIndividuals>,
     query: Query<Entity, With<Individual>>,
 ) {
-    let selected = selection.get_mut();
     loop {
         let entity = query.iter().choose(&mut thread_rng()).unwrap();
-        if !selected.contains(&entity) {
-            selected.push(entity);
+        if !selection.contains(&entity) {
+            selection.select(entity);
             break;
         }
     }

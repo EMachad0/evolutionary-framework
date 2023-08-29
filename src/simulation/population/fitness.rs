@@ -1,6 +1,6 @@
 use bevy::prelude::*;
 
-#[derive(Default, Debug, Component, Reflect)]
+#[derive(Default, Debug, Copy, Clone, Component, Reflect)]
 pub struct Fitness(f64);
 
 impl Fitness {

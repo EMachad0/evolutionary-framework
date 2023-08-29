@@ -4,6 +4,7 @@
 mod board;
 mod board_position;
 mod fitness;
+mod loading;
 mod queen;
 
 use bevy::prelude::*;
@@ -33,7 +34,7 @@ fn main() {
             }),
             ..default()
         }))
-        .add_plugins(EvolutionaryFrameworkPlugin)
+        .add_plugins((EvolutionaryFrameworkPlugin, loading::LoadingPlugin))
         .register_type::<board_position::BoardPosition>()
         .add_systems(Startup, set_window_icon)
         .add_systems(
