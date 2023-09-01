@@ -1,0 +1,6 @@
+[population]
+dim = 10
+size = 10
+
+[population.cod]
+type = "Bool"
