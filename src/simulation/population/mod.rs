@@ -2,28 +2,45 @@ pub mod fitness;
 pub mod genes;
 pub mod individual;
 pub mod init_params;
+pub mod run_condition;
+pub mod spawn_population;
 
-use crate::simulation::population::fitness::Fitness;
 use bevy::prelude::*;
 
-use crate::simulation::population::genes::Gene;
-use crate::simulation::population::genes::GeneCod;
+use crate::simulation::population::fitness::Fitness;
+use crate::simulation::population::genes::{Bool, Gene, Int, Perm, Real};
 use crate::simulation::population::individual::Individual;
 use crate::simulation::population::init_params::PopulationInitParams;
+use crate::simulation::SimulationSet;
+use crate::GameState;
 
-pub fn spawn_population<G>(mut commands: Commands, population_cod: Res<PopulationInitParams<G>>)
-where
-    G: 'static + Send + Sync + GeneCod,
-{
-    let PopulationInitParams { size, dim, arg } = *population_cod;
+pub struct PopulationPlugin;
 
-    let population = (0..size)
-        .map(|i| {
-            let name = Name::new(format!("Individual {}", i));
-            let gene = Gene::from(G::new(dim, &arg));
-            (name, gene, Fitness::default(), Individual)
-        })
-        .collect::<Vec<_>>();
-
-    commands.spawn_batch(population);
+impl Plugin for PopulationPlugin {
+    fn build(&self, app: &mut App) {
+        app.register_type::<Gene<Bool>>()
+            .register_type::<Gene<Int>>()
+            .register_type::<Gene<Perm>>()
+            .register_type::<Gene<Real>>()
+            .register_type::<Individual>()
+            .register_type::<Fitness>()
+            .add_systems(
+                OnEnter(GameState::Playing),
+                (
+                    init_params::insert_population_init_params,
+                    (
+                        spawn_population::spawn_population::<Bool>
+                            .run_if(resource_exists::<PopulationInitParams<Bool>>()),
+                        spawn_population::spawn_population::<Int>
+                            .run_if(resource_exists::<PopulationInitParams<Int>>()),
+                        spawn_population::spawn_population::<Real>
+                            .run_if(resource_exists::<PopulationInitParams<Real>>()),
+                        spawn_population::spawn_population::<Perm>
+                            .run_if(resource_exists::<PopulationInitParams<Perm>>()),
+                    ),
+                )
+                    .chain()
+                    .in_set(SimulationSet::PopulationStart),
+            );
+    }
 }

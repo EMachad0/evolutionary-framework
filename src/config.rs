@@ -25,10 +25,18 @@ pub struct PopulationConfig {
     pub cod: PopulationGenInfo,
 }
 
+#[derive(Default, Debug, Copy, Clone, Serialize, Deserialize, Reflect)]
+pub struct SelectionConfig {
+    pub elitism: usize,
+    pub crossover_prob: f64,
+    pub mutation_prob: f64,
+}
+
 #[derive(Default, Debug, Copy, Clone, Deserialize, Resource, Reflect)]
 #[reflect(Resource)]
 pub struct Config {
     pub population: PopulationConfig,
+    pub selection: SelectionConfig,
 }
 
 pub struct ConfigPlugin;

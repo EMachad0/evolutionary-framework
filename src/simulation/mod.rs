@@ -1,41 +1,43 @@
 pub mod population;
+pub mod selection;
 
+use bevy::ecs::schedule::ScheduleLabel;
+use bevy::input::common_conditions::input_just_pressed;
 use bevy::prelude::*;
 
-use population::genes::{Bool, Int, Perm, Real};
-use population::init_params::PopulationInitParams;
+#[derive(Debug, Hash, Copy, Clone, PartialEq, Eq, SystemSet)]
+pub enum SimulationSet {
+    PopulationStart,
+    Elitism,
+    Selection,
+    Fitness,
+}
 
-use crate::simulation::population::fitness::Fitness;
-use crate::simulation::population::genes::Gene;
-use crate::simulation::population::individual::Individual;
-use crate::GameState;
+#[derive(Debug, Hash, PartialEq, Eq, Clone, ScheduleLabel)]
+pub struct SelectionSchedule;
 
 pub struct SimulationPlugin;
 
 impl Plugin for SimulationPlugin {
     fn build(&self, app: &mut App) {
-        app.register_type::<Gene<Bool>>()
-            .register_type::<Gene<Int>>()
-            .register_type::<Gene<Perm>>()
-            .register_type::<Gene<Real>>()
-            .register_type::<Individual>()
-            .register_type::<Fitness>()
-            .add_systems(
-                OnEnter(GameState::Playing),
+        app.init_schedule(SelectionSchedule)
+            .configure_sets(
+                SelectionSchedule,
                 (
-                    population::init_params::insert_population_init_params,
-                    (
-                        population::spawn_population::<Bool>
-                            .run_if(resource_exists::<PopulationInitParams<Bool>>()),
-                        population::spawn_population::<Int>
-                            .run_if(resource_exists::<PopulationInitParams<Int>>()),
-                        population::spawn_population::<Real>
-                            .run_if(resource_exists::<PopulationInitParams<Real>>()),
-                        population::spawn_population::<Perm>
-                            .run_if(resource_exists::<PopulationInitParams<Perm>>()),
-                    ),
+                    SimulationSet::Elitism,
+                    SimulationSet::Selection,
+                    SimulationSet::Fitness,
                 )
                     .chain(),
-            );
+            )
+            .add_systems(
+                PostUpdate,
+                run_simulation_step.run_if(input_just_pressed(KeyCode::Space)),
+            )
+            .add_plugins((population::PopulationPlugin, selection::SelectionPlugin));
     }
+}
+
+pub fn run_simulation_step(world: &mut World) {
+    world.run_schedule(SelectionSchedule);
 }

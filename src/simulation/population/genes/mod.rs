@@ -19,7 +19,7 @@ pub trait GeneCod {
     fn get(&self) -> &Self::G;
 }
 
-#[derive(Debug, Component, Reflect)]
+#[derive(Debug, Clone, Component, Reflect)]
 pub struct Gene<G: GeneCod>(G);
 
 impl<G: GeneCod> Gene<G> {

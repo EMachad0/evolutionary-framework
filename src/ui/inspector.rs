@@ -127,7 +127,7 @@ fn ui_for_individuals(world: &mut World, ui: &mut egui::Ui) {
         .iter(world)
         .map(|(e, n, f)| (e, n.clone(), *f))
         .collect_vec();
-    individuals.sort_by(|(_, _, a), (_, _, b)| a.get().partial_cmp(&b.get()).unwrap());
+    individuals.sort_by(|(_, _, a), (_, _, b)| a.get().partial_cmp(&b.get()).unwrap().reverse());
     let ui_config = world
         .resource::<crate::ui::ui_config::UiConfig>()
         .selection_mode;
