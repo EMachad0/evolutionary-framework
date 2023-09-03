@@ -1,3 +1,6 @@
+[simulation]
+target_generation = 100
+
 [population]
 dim = 16
 size = 10

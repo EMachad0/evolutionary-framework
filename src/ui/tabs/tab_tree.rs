@@ -8,7 +8,7 @@ use crate::simulation::generation_counter::GenerationCounter;
 use crate::ui::tabs::ui_for_controls::{
     update_ui_state_generation_counter, update_ui_state_steps_per_second, ControlsUiState,
 };
-use crate::ui::tabs::{ui_for_controls, ui_for_individuals, ui_for_simulation};
+use crate::ui::tabs::{ui_for_controls, ui_for_fitness, ui_for_individuals, ui_for_simulation};
 use crate::GameState;
 
 pub const TAB_BAR_HEIGHT: f32 = 20.;
@@ -43,6 +43,7 @@ impl Plugin for TabsPlugin {
 #[derive(Debug)]
 enum UiWindows {
     Simulation,
+    Fitness,
     Individuals,
     Inspector,
     Controls,
@@ -55,7 +56,7 @@ struct TabUiState {
 
 impl TabUiState {
     pub fn new() -> Self {
-        let mut tree = Tree::new(vec![UiWindows::Simulation]);
+        let mut tree = Tree::new(vec![UiWindows::Simulation, UiWindows::Fitness]);
         let [_game, inspector] = tree.split_right(
             NodeIndex::root(),
             0.75,
@@ -94,6 +95,7 @@ impl egui_dock::TabViewer for TabViewer<'_> {
     fn ui(&mut self, ui: &mut egui::Ui, window: &mut Self::Tab) {
         match window {
             UiWindows::Simulation => ui_for_simulation::ui_for_simulation(self.world, ui),
+            UiWindows::Fitness => ui_for_fitness::ui_for_fitness(self.world, ui),
             UiWindows::Individuals => ui_for_individuals::ui_for_individuals(self.world, ui),
             UiWindows::Inspector => ui_for_world(self.world, ui),
             UiWindows::Controls => ui_for_controls::ui_for_controls(self.world, ui),

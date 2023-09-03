@@ -1,5 +1,6 @@
 pub mod early_stop;
 pub mod evolutionary_steps;
+pub mod fitness_diagnostics;
 pub mod fixed_timestep;
 pub mod generation_counter;
 pub mod population;
@@ -57,6 +58,7 @@ impl Plugin for SimulationPlugin {
                 fixed_timestep::FixedTimestepPlugin,
                 generation_counter::GenerationCounterPlugin,
                 early_stop::EarlyStopPlugin,
+                fitness_diagnostics::FitnessDiagnosticsPlugin,
             ));
     }
 }
