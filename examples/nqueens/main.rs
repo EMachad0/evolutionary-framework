@@ -11,11 +11,10 @@ use bevy::prelude::*;
 use bevy::DefaultPlugins;
 
 use evolutionary_framework::simulation::population::individual::Individual;
-use evolutionary_framework::window::set_window_icon;
-use evolutionary_framework::{
-    EvolutionaryFrameworkPlugin, GameState,
-};
 use evolutionary_framework::simulation::selected_individuals::select_random_individual;
+use evolutionary_framework::simulation::{SimulationSchedule, SimulationSet};
+use evolutionary_framework::window::set_window_icon;
+use evolutionary_framework::{EvolutionaryFrameworkPlugin, GameState};
 
 fn main() {
     App::new()
@@ -47,6 +46,10 @@ fn main() {
                 .chain(),),
         )
         .add_systems(
+            SimulationSchedule,
+            fitness::calc_fitness.in_set(SimulationSet::Fitness),
+        )
+        .add_systems(
             PreUpdate,
             (
                 select_random_individual
@@ -54,7 +57,6 @@ fn main() {
                 board_position::transform_from_board_position,
                 board::update_board_if_resize,
                 queen::queens_from_selected_individual,
-                fitness::calc_fitness,
             )
                 .run_if(in_state(GameState::Playing)),
         )

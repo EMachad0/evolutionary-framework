@@ -1,3 +1,4 @@
+pub mod early_stop;
 pub mod evolutionary_steps;
 pub mod fixed_timestep;
 pub mod generation_counter;
@@ -30,11 +31,11 @@ impl Plugin for SimulationPlugin {
             .configure_sets(
                 SimulationSchedule,
                 (
+                    SimulationSet::Fitness,
                     SimulationSet::Elitism,
                     SimulationSet::Selection,
                     SimulationSet::Crossover,
                     SimulationSet::Mutation,
-                    SimulationSet::Fitness,
                 )
                     .chain(),
             )
@@ -55,6 +56,7 @@ impl Plugin for SimulationPlugin {
                 evolutionary_steps::EvolutionaryStepsPlugin,
                 fixed_timestep::FixedTimestepPlugin,
                 generation_counter::GenerationCounterPlugin,
+                early_stop::EarlyStopPlugin,
             ));
     }
 }

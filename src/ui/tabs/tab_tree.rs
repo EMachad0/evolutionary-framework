@@ -5,7 +5,9 @@ use bevy_inspector_egui::{bevy_inspector::ui_for_world, DefaultInspectorConfigPl
 use egui_dock::{DockArea, NodeIndex, Style, TabBarStyle, Tree};
 
 use crate::simulation::generation_counter::GenerationCounter;
-use crate::ui::tabs::ui_for_controls::{update_ui_state_generation_counter, ControlsUiState};
+use crate::ui::tabs::ui_for_controls::{
+    update_ui_state_generation_counter, update_ui_state_steps_per_second, ControlsUiState,
+};
 use crate::ui::tabs::{ui_for_controls, ui_for_individuals, ui_for_simulation};
 use crate::GameState;
 
@@ -29,7 +31,11 @@ impl Plugin for TabsPlugin {
             )
             .add_systems(
                 PostUpdate,
-                update_ui_state_generation_counter.run_if(resource_added::<GenerationCounter>()),
+                (
+                    update_ui_state_generation_counter
+                        .run_if(resource_added::<GenerationCounter>()),
+                    update_ui_state_steps_per_second.run_if(resource_added::<FixedTime>()),
+                ),
             );
     }
 }
@@ -55,7 +61,7 @@ impl TabUiState {
             0.75,
             vec![UiWindows::Individuals, UiWindows::Inspector],
         );
-        let [_inspector, _controls] = tree.split_below(inspector, 0.8, vec![UiWindows::Controls]);
+        let [_inspector, _controls] = tree.split_below(inspector, 0.75, vec![UiWindows::Controls]);
 
         Self { tree }
     }

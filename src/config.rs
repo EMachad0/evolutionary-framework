@@ -1,6 +1,7 @@
 use bevy::prelude::*;
 use serde::{Deserialize, Serialize};
 
+use crate::simulation::fixed_timestep::DEFAULT_STEPS_PER_SECOND;
 use crate::toml_asset::TomlAsset;
 use crate::GameState;
 
@@ -32,11 +33,29 @@ pub struct SelectionConfig {
     pub mutation_prob: f64,
 }
 
+#[derive(Debug, Copy, Clone, Serialize, Deserialize, Reflect)]
+#[serde(default)]
+pub struct SimulationConfig {
+    pub target_generation: u64,
+    pub steps_per_second: f64,
+}
+
+impl Default for SimulationConfig {
+    fn default() -> Self {
+        Self {
+            target_generation: 0,
+            steps_per_second: DEFAULT_STEPS_PER_SECOND,
+        }
+    }
+}
+
 #[derive(Default, Debug, Copy, Clone, Deserialize, Resource, Reflect)]
 #[reflect(Resource)]
 pub struct Config {
     pub population: PopulationConfig,
     pub selection: SelectionConfig,
+    #[serde(default)]
+    pub simulation: SimulationConfig,
 }
 
 pub struct ConfigPlugin;

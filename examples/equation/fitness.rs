@@ -1,18 +1,19 @@
 use bevy::prelude::*;
-use evolutionary_framework::GameState;
 
 use crate::function::Function;
 use evolutionary_framework::simulation::population::fitness::Fitness;
 use evolutionary_framework::simulation::population::genes::{Bool, Gene};
+use evolutionary_framework::simulation::{SimulationSchedule, SimulationSet};
 
 pub struct FitnessPlugin;
 
 impl Plugin for FitnessPlugin {
     fn build(&self, app: &mut App) {
         app.add_systems(
-            PostUpdate,
+            SimulationSchedule,
             calc_fitness
-                .run_if(in_state(GameState::Playing).and_then(any_with_component::<Function>())),
+                .in_set(SimulationSet::Fitness)
+                .run_if(any_with_component::<Function>()),
         );
     }
 }
