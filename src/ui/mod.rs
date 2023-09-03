@@ -1,6 +1,5 @@
-pub mod inspector;
 pub mod menu;
-pub mod selected_individuals;
+pub mod tabs;
 pub mod ui_config;
 
 use bevy::prelude::*;
@@ -14,10 +13,7 @@ pub struct UiPlugin {
 
 impl Plugin for UiPlugin {
     fn build(&self, app: &mut App) {
-        app.insert_resource(self.config).add_plugins((
-            inspector::InspectorPlugin,
-            menu::MenuPlugin,
-            selected_individuals::SelectedIndividualsPlugin,
-        ));
+        app.insert_resource(self.config)
+            .add_plugins((tabs::TabsPlugin, menu::MenuPlugin));
     }
 }

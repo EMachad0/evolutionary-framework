@@ -13,8 +13,9 @@ use bevy::DefaultPlugins;
 use evolutionary_framework::simulation::population::individual::Individual;
 use evolutionary_framework::window::set_window_icon;
 use evolutionary_framework::{
-    ui::selected_individuals::select_random_individual, EvolutionaryFrameworkPlugin, GameState,
+    EvolutionaryFrameworkPlugin, GameState,
 };
+use evolutionary_framework::simulation::selected_individuals::select_random_individual;
 
 fn main() {
     App::new()

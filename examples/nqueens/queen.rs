@@ -5,7 +5,7 @@ use crate::board::Board;
 use crate::board_position::BoardPosition;
 use crate::loading::textures::TextureAssets;
 use evolutionary_framework::simulation::population::genes::{Gene, GeneCod, Perm};
-use evolutionary_framework::ui::selected_individuals::SelectedIndividuals;
+use evolutionary_framework::simulation::selected_individuals::SelectedIndividuals;
 
 #[derive(Debug, Component, Reflect)]
 pub struct Queen;
