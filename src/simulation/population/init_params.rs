@@ -1,16 +1,16 @@
 use bevy::prelude::*;
 
 use crate::config::{Config, PopulationConfig, PopulationGenInfo};
-use crate::simulation::population::genes::{Bool, GeneCod, Int, Perm, Real};
+use crate::simulation::population::genes::{Bool, Chromosome, Int, Perm, Real};
 
 #[derive(Default, Debug, Copy, Clone, Resource)]
-pub struct PopulationInitParams<G: GeneCod> {
+pub struct PopulationInitParams<G: Chromosome> {
     pub size: usize,
     pub dim: usize,
     pub arg: G::I,
 }
 
-impl<G: GeneCod> PopulationInitParams<G> {
+impl<G: Chromosome> PopulationInitParams<G> {
     pub fn new(size: usize, dim: usize, arg: G::I) -> Self {
         Self { size, dim, arg }
     }

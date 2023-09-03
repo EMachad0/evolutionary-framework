@@ -2,12 +2,12 @@ use bevy::prelude::Reflect;
 use rand::seq::SliceRandom;
 use rand::thread_rng;
 
-use crate::simulation::population::genes::GeneCod;
+use crate::simulation::population::genes::Chromosome;
 
 #[derive(Debug, Clone, Reflect)]
 pub struct Perm(Vec<i32>);
 
-impl GeneCod for Perm {
+impl Chromosome for Perm {
     type I = ();
     type G = i32;
 
@@ -24,5 +24,9 @@ impl GeneCod for Perm {
 
     fn get_mut(&mut self) -> &mut Vec<Self::G> {
         &mut self.0
+    }
+
+    fn mutate(&mut self, _prob: f64) {
+        todo!()
     }
 }

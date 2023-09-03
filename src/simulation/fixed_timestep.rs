@@ -43,7 +43,7 @@ impl FixedTimestep {
 }
 
 pub fn setup_simulation_fixed_timestep(mut commands: Commands) {
-    let step = Duration::from_secs_f64(1. / 60.);
+    let step = Duration::from_secs_f64(1.);
     let fixed_timestep = FixedTimestep::new(step).with_schedule(SimulationSchedule);
     commands.spawn((Name::new("Simulation Fixed Timestep"), fixed_timestep));
 }

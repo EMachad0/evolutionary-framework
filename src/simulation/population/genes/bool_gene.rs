@@ -1,12 +1,13 @@
 use bevy::prelude::Reflect;
-use rand::Rng;
+use rand::distributions::Bernoulli;
+use rand::prelude::*;
 
-use crate::simulation::population::genes::GeneCod;
+use crate::simulation::population::genes::Chromosome;
 
 #[derive(Debug, Clone, Reflect)]
 pub struct Bool(Vec<bool>);
 
-impl GeneCod for Bool {
+impl Chromosome for Bool {
     type I = ();
     type G = bool;
 
@@ -22,5 +23,15 @@ impl GeneCod for Bool {
 
     fn get_mut(&mut self) -> &mut Vec<Self::G> {
         &mut self.0
+    }
+
+    fn mutate(&mut self, prob: f64) {
+        let mut rng = thread_rng();
+        let distribution = Bernoulli::new(prob).unwrap();
+        for bit in self.0.iter_mut() {
+            if distribution.sample(&mut rng) {
+                *bit = !*bit
+            }
+        }
     }
 }

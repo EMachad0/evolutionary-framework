@@ -5,7 +5,7 @@ use rand::prelude::*;
 
 use crate::config::Config;
 use crate::simulation::evolutionary_steps::elitism::Elitism;
-use crate::simulation::population::genes::{Bool, Gene, GeneCod, Int, Perm, Real};
+use crate::simulation::population::genes::{Bool, Chromosome, Gene, Int, Perm, Real};
 use crate::simulation::population::run_condition::population_type;
 use crate::simulation::{SimulationSchedule, SimulationSet};
 
@@ -21,19 +21,20 @@ impl Plugin for CrossoverPlugin {
                 crossover::<Perm>.run_if(population_type::<Perm>),
                 crossover::<Real>.run_if(population_type::<Real>),
             )
+                .run_if(is_crossover_enabled)
                 .in_set(SimulationSet::Crossover),
         );
     }
 }
 
-pub fn crossover<G: GeneCod>(
+pub fn is_crossover_enabled(config: Res<Config>) -> bool {
+    config.population.dim >= 2 && config.selection.crossover_prob > 0.
+}
+
+pub fn crossover<G: Chromosome>(
     config: Res<Config>,
     mut query: Query<&mut Gene<G>, Without<Elitism>>,
 ) {
-    if config.population.dim < 2 {
-        return;
-    }
-
     let mut rng = thread_rng();
     let cut_rng = Uniform::new(1, config.population.dim - 1);
     let mut population = query.iter_mut().collect_vec();

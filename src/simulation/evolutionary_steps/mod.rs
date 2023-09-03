@@ -1,5 +1,6 @@
 pub mod crossover;
 pub mod elitism;
+pub mod mutation;
 pub mod selection;
 
 use bevy::prelude::*;
@@ -12,6 +13,7 @@ impl Plugin for EvolutionaryStepsPlugin {
             elitism::ElitismPlugin,
             selection::SelectionPlugin,
             crossover::CrossoverPlugin,
+            mutation::MutationPlugin,
         ));
     }
 }

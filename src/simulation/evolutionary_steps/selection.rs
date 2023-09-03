@@ -5,7 +5,7 @@ use rand::prelude::*;
 use crate::config::Config;
 use crate::simulation::evolutionary_steps::elitism::Elitism;
 use crate::simulation::population::fitness::Fitness;
-use crate::simulation::population::genes::{Bool, Gene, GeneCod, Int, Perm, Real};
+use crate::simulation::population::genes::{Bool, Gene, Chromosome, Int, Perm, Real};
 use crate::simulation::population::run_condition::population_type;
 use crate::simulation::{SimulationSchedule, SimulationSet};
 
@@ -26,7 +26,7 @@ impl Plugin for SelectionPlugin {
     }
 }
 
-pub fn select<G: GeneCod>(
+pub fn select<G: Chromosome>(
     config: Res<Config>,
     mut query: Query<(&mut Gene<G>, Option<&Elitism>, &Fitness)>,
 ) {

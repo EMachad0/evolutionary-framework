@@ -2,12 +2,12 @@ use bevy::prelude::Reflect;
 use rand::distributions::Uniform;
 use rand::{thread_rng, Rng};
 
-use crate::simulation::population::genes::GeneCod;
+use crate::simulation::population::genes::Chromosome;
 
 #[derive(Debug, Clone, Reflect)]
 pub struct Real(Vec<f64>);
 
-impl GeneCod for Real {
+impl Chromosome for Real {
     type I = (f64, f64);
     type G = f64;
 
@@ -24,5 +24,9 @@ impl GeneCod for Real {
 
     fn get_mut(&mut self) -> &mut Vec<Self::G> {
         &mut self.0
+    }
+
+    fn mutate(&mut self, _prob: f64) {
+        todo!()
     }
 }
