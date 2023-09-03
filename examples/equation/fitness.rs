@@ -3,7 +3,7 @@ use evolutionary_framework::GameState;
 
 use crate::function::Function;
 use evolutionary_framework::simulation::population::fitness::Fitness;
-use evolutionary_framework::simulation::population::genes::{Bool, Gene, GeneCod};
+use evolutionary_framework::simulation::population::genes::{Bool, Gene};
 
 pub struct FitnessPlugin;
 
@@ -37,7 +37,7 @@ pub fn calc_fitness(
 }
 
 pub fn gene_to_value(gene: &Gene<Bool>) -> f32 {
-    let gene = gene.get().get();
+    let gene = gene.get();
     let mut dec = 0.;
     for b in gene.iter().rev() {
         if *b {

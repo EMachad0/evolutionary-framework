@@ -9,7 +9,7 @@ pub struct Real(Vec<f64>);
 
 impl GeneCod for Real {
     type I = (f64, f64);
-    type G = Vec<f64>;
+    type G = f64;
 
     fn new(dim: usize, (min, max): &Self::I) -> Self {
         let mut rng = thread_rng();
@@ -18,7 +18,11 @@ impl GeneCod for Real {
         Self(gene)
     }
 
-    fn get(&self) -> &Self::G {
+    fn get(&self) -> &Vec<Self::G> {
         &self.0
+    }
+
+    fn get_mut(&mut self) -> &mut Vec<Self::G> {
+        &mut self.0
     }
 }

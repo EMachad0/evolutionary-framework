@@ -1,6 +1,6 @@
 use bevy::prelude::*;
 
-use crate::simulation::SelectionSchedule;
+use crate::simulation::SimulationSchedule;
 
 pub struct GenerationCounterPlugin;
 
@@ -8,7 +8,7 @@ impl Plugin for GenerationCounterPlugin {
     fn build(&self, app: &mut App) {
         app.register_type::<GenerationCounter>()
             .init_resource::<GenerationCounter>()
-            .add_systems(SelectionSchedule, update_counter);
+            .add_systems(SimulationSchedule, update_counter);
     }
 }
 

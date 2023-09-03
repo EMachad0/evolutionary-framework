@@ -9,7 +9,7 @@ pub struct Perm(Vec<i32>);
 
 impl GeneCod for Perm {
     type I = ();
-    type G = Vec<i32>;
+    type G = i32;
 
     fn new(dim: usize, _: &Self::I) -> Self {
         let mut gene = (0..dim as i32).collect::<Vec<i32>>();
@@ -18,7 +18,11 @@ impl GeneCod for Perm {
         Self(gene)
     }
 
-    fn get(&self) -> &Self::G {
+    fn get(&self) -> &Vec<Self::G> {
         &self.0
+    }
+
+    fn get_mut(&mut self) -> &mut Vec<Self::G> {
+        &mut self.0
     }
 }

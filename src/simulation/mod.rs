@@ -1,8 +1,8 @@
+pub mod evolutionary_steps;
 pub mod fixed_timestep;
 pub mod generation_counter;
 pub mod population;
 pub mod selected_individuals;
-pub mod selection;
 pub mod simulation_state;
 
 use bevy::ecs::schedule::ScheduleLabel;
@@ -14,22 +14,26 @@ pub enum SimulationSet {
     PopulationStart,
     Elitism,
     Selection,
+    Crossover,
+    Mutation,
     Fitness,
 }
 
 #[derive(Debug, Hash, PartialEq, Eq, Clone, ScheduleLabel)]
-pub struct SelectionSchedule;
+pub struct SimulationSchedule;
 
 pub struct SimulationPlugin;
 
 impl Plugin for SimulationPlugin {
     fn build(&self, app: &mut App) {
-        app.init_schedule(SelectionSchedule)
+        app.init_schedule(SimulationSchedule)
             .configure_sets(
-                SelectionSchedule,
+                SimulationSchedule,
                 (
                     SimulationSet::Elitism,
                     SimulationSet::Selection,
+                    SimulationSet::Crossover,
+                    SimulationSet::Mutation,
                     SimulationSet::Fitness,
                 )
                     .chain(),
@@ -39,7 +43,7 @@ impl Plugin for SimulationPlugin {
                 simulation_state::pause_simulation.run_if(input_just_pressed(KeyCode::Space)),
             )
             .add_systems(
-                SelectionSchedule,
+                SimulationSchedule,
                 simulation_state::pause_simulation
                     .after(generation_counter::update_counter)
                     .run_if(generation_counter::counter_just_finished),
@@ -48,7 +52,7 @@ impl Plugin for SimulationPlugin {
                 simulation_state::SimulationStatePlugin,
                 selected_individuals::SelectedIndividualsPlugin,
                 population::PopulationPlugin,
-                selection::SelectionPlugin,
+                evolutionary_steps::EvolutionaryStepsPlugin,
                 fixed_timestep::FixedTimestepPlugin,
                 generation_counter::GenerationCounterPlugin,
             ));

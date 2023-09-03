@@ -4,7 +4,7 @@ use bevy::sprite::Anchor;
 use crate::board::Board;
 use crate::board_position::BoardPosition;
 use crate::loading::textures::TextureAssets;
-use evolutionary_framework::simulation::population::genes::{Gene, GeneCod, Perm};
+use evolutionary_framework::simulation::population::genes::{Gene, Perm};
 use evolutionary_framework::simulation::selected_individuals::SelectedIndividuals;
 
 #[derive(Debug, Component, Reflect)]
@@ -38,7 +38,7 @@ pub fn queens_from_selected_individual(
 ) {
     if let Some(entity) = selected.single() {
         let individual = individuals.get(*entity).unwrap();
-        let perm = individual.get().get();
+        let perm = individual.get();
 
         for ((x, y), mut board_position) in perm.iter().enumerate().zip(queens.iter_mut()) {
             *board_position = BoardPosition { x, y: *y as usize };

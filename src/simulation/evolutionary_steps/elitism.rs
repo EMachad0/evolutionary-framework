@@ -3,6 +3,21 @@ use itertools::Itertools;
 
 use crate::config::Config;
 use crate::simulation::population::fitness::Fitness;
+use crate::simulation::{SimulationSchedule, SimulationSet};
+
+pub struct ElitismPlugin;
+
+impl Plugin for ElitismPlugin {
+    fn build(&self, app: &mut App) {
+        app.register_type::<Elitism>().add_systems(
+            SimulationSchedule,
+            (clean_elitism, select_elitism)
+                .run_if(is_elitist)
+                .chain()
+                .in_set(SimulationSet::Elitism),
+        );
+    }
+}
 
 #[derive(Debug, Component, Reflect)]
 pub struct Elitism;

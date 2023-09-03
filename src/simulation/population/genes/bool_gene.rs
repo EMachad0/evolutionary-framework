@@ -8,7 +8,7 @@ pub struct Bool(Vec<bool>);
 
 impl GeneCod for Bool {
     type I = ();
-    type G = Vec<bool>;
+    type G = bool;
 
     fn new(dim: usize, (): &Self::I) -> Self {
         let mut rng = rand::thread_rng();
@@ -16,7 +16,11 @@ impl GeneCod for Bool {
         Self(gene)
     }
 
-    fn get(&self) -> &Self::G {
+    fn get(&self) -> &Vec<Self::G> {
         &self.0
+    }
+
+    fn get_mut(&mut self) -> &mut Vec<Self::G> {
+        &mut self.0
     }
 }

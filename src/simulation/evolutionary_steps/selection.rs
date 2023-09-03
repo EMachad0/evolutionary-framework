@@ -1,19 +1,35 @@
 use bevy::prelude::*;
 use itertools::Itertools;
-use rand::prelude::SliceRandom;
-use rand::thread_rng;
+use rand::prelude::*;
 
 use crate::config::Config;
+use crate::simulation::evolutionary_steps::elitism::Elitism;
 use crate::simulation::population::fitness::Fitness;
-use crate::simulation::population::genes::{Gene, GeneCod};
-use crate::simulation::selection::elitism::Elitism;
+use crate::simulation::population::genes::{Bool, Gene, GeneCod, Int, Perm, Real};
+use crate::simulation::population::run_condition::population_type;
+use crate::simulation::{SimulationSchedule, SimulationSet};
 
-pub fn select_new_generation<G>(
+pub struct SelectionPlugin;
+
+impl Plugin for SelectionPlugin {
+    fn build(&self, app: &mut App) {
+        app.add_systems(
+            SimulationSchedule,
+            (
+                select::<Bool>.run_if(population_type::<Bool>),
+                select::<Int>.run_if(population_type::<Int>),
+                select::<Perm>.run_if(population_type::<Perm>),
+                select::<Real>.run_if(population_type::<Real>),
+            )
+                .in_set(SimulationSet::Selection),
+        );
+    }
+}
+
+pub fn select<G: GeneCod>(
     config: Res<Config>,
     mut query: Query<(&mut Gene<G>, Option<&Elitism>, &Fitness)>,
-) where
-    G: 'static + Clone + Send + Sync + GeneCod,
-{
+) {
     let mut rng = thread_rng();
 
     let population = query.iter_mut().collect_vec();

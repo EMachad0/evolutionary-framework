@@ -2,7 +2,7 @@ use bevy::prelude::*;
 use evolutionary_framework::GameState;
 
 use evolutionary_framework::simulation::population::fitness::Fitness;
-use evolutionary_framework::simulation::population::genes::{Bool, Gene, GeneCod};
+use evolutionary_framework::simulation::population::genes::{Bool, Gene};
 
 pub struct FitnessPlugin;
 
@@ -28,7 +28,7 @@ pub fn calc_fitness(mut individuals: Query<(&Gene<Bool>, &mut Fitness)>) {
 }
 
 pub fn gene_to_value(gene: &Gene<Bool>) -> (i32, i32) {
-    let gene = gene.get().get();
+    let gene = gene.get();
     let mut st = 0;
     for bit in gene.iter().take(5) {
         st *= 2;

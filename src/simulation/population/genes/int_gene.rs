@@ -9,7 +9,7 @@ pub struct Int(Vec<i32>);
 
 impl GeneCod for Int {
     type I = (i32, i32);
-    type G = Vec<i32>;
+    type G = i32;
 
     fn new(dim: usize, (min, max): &Self::I) -> Self {
         let mut rng = thread_rng();
@@ -18,7 +18,11 @@ impl GeneCod for Int {
         Self(gene)
     }
 
-    fn get(&self) -> &Self::G {
+    fn get(&self) -> &Vec<Self::G> {
         &self.0
+    }
+
+    fn get_mut(&mut self) -> &mut Vec<Self::G> {
+        &mut self.0
     }
 }
