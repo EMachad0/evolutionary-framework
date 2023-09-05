@@ -1,14 +1,12 @@
 use bevy::prelude::*;
 
 use crate::simulation::population::fitness::Fitness;
-use crate::simulation::population::genes::{Gene, Chromosome};
+use crate::simulation::population::genes::{Chromosome, Gene};
 use crate::simulation::population::individual::Individual;
 use crate::simulation::population::init_params::PopulationInitParams;
 
-pub fn spawn_population<G: Chromosome>(
-    mut commands: Commands,
-    population_cod: Res<PopulationInitParams<G>>,
-) {
+pub fn spawn_population<G: Chromosome>(world: &mut World) {
+    let population_cod = world.resource::<PopulationInitParams<G>>();
     let PopulationInitParams { size, dim, arg } = *population_cod;
 
     let population = (0..size)
@@ -19,5 +17,5 @@ pub fn spawn_population<G: Chromosome>(
         })
         .collect::<Vec<_>>();
 
-    commands.spawn_batch(population);
+    world.spawn_batch(population);
 }

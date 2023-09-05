@@ -14,11 +14,12 @@ use bevy::prelude::*;
 #[derive(Debug, Hash, Copy, Clone, PartialEq, Eq, SystemSet)]
 pub enum SimulationSet {
     PopulationStart,
+    Decoding,
+    Fitness,
     Elitism,
     Selection,
     Crossover,
     Mutation,
-    Fitness,
 }
 
 #[derive(Debug, Hash, PartialEq, Eq, Clone, ScheduleLabel)]
@@ -32,6 +33,7 @@ impl Plugin for SimulationPlugin {
             .configure_sets(
                 SimulationSchedule,
                 (
+                    SimulationSet::Decoding,
                     SimulationSet::Fitness,
                     SimulationSet::Elitism,
                     SimulationSet::Selection,

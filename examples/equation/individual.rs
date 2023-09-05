@@ -1,32 +1,30 @@
 use bevy::prelude::*;
 use bevy::sprite::MaterialMesh2dBundle;
-use evolutionary_framework::GameState;
 
 use crate::cartesian_plane::plane::Plane;
-use crate::fitness;
-use crate::function::Function;
-use evolutionary_framework::simulation::population::genes::{Bool, Gene};
+use crate::objective::EquationObjective;
 use evolutionary_framework::simulation::population::individual::Individual;
+use evolutionary_framework::simulation::SimulationSet;
+use evolutionary_framework::GameState;
 
 pub struct IndividualPlugin;
 
 impl Plugin for IndividualPlugin {
     fn build(&self, app: &mut App) {
         app.add_systems(
+            OnEnter(GameState::Playing),
+            insert_individual_shape.after(SimulationSet::PopulationStart),
+        )
+        .add_systems(
             PostUpdate,
-            (
-                (spawn_individuals).run_if(in_state(GameState::Playing)),
-                (update_individuals).run_if(
-                    in_state(GameState::Playing).and_then(any_with_component::<Function>()),
-                ),
-            ),
+            (update_individual_shape.run_if(in_state(GameState::Playing)),),
         );
     }
 }
 
-pub fn spawn_individuals(
+pub fn insert_individual_shape(
     mut commands: Commands,
-    individuals: Query<Entity, Added<Individual>>,
+    individuals: Query<Entity, With<Individual>>,
     mut meshes: ResMut<Assets<Mesh>>,
     mut materials: ResMut<Assets<ColorMaterial>>,
 ) {
@@ -43,17 +41,13 @@ pub fn spawn_individuals(
     }
 }
 
-pub fn update_individuals(
-    mut individuals: Query<(&mut Transform, &Gene<Bool>)>,
-    function: Query<&Function>,
+pub fn update_individual_shape(
+    mut individuals: Query<(&mut Transform, &EquationObjective)>,
     plane: Query<&Plane>,
 ) {
     let Plane { scale } = *plane.single();
-    let function = function.single();
-    let x_domain = function.x_domain;
-    for (mut transform, gene) in individuals.iter_mut() {
-        let x = fitness::gene_to_value(gene) * (x_domain.1 - x_domain.0) + x_domain.0;
-        let y = (function.f)(x);
+    for (mut transform, objective) in individuals.iter_mut() {
+        let EquationObjective { x, y } = objective;
         transform.translation = Vec3::new(x * scale, y * scale, transform.translation.z);
     }
 }

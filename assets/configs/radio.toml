@@ -1,5 +1,5 @@
 [simulation]
-target_generation = 100
+target_generation = 10
 
 [population]
 dim = 10
@@ -10,5 +10,5 @@ type = "Bool"
 
 [selection]
 elitism = 1
-crossover_prob = 0.8
+crossover_prob = 1
 mutation_prob = 0.05

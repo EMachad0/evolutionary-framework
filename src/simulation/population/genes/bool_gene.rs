@@ -5,7 +5,7 @@ use rand::prelude::*;
 use crate::simulation::population::genes::Chromosome;
 
 #[derive(Debug, Clone, Reflect)]
-pub struct Bool(Vec<bool>);
+pub struct Bool(pub Vec<bool>);
 
 impl Chromosome for Bool {
     type I = ();

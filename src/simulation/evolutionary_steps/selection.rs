@@ -5,7 +5,7 @@ use rand::prelude::*;
 use crate::config::Config;
 use crate::simulation::evolutionary_steps::elitism::Elitism;
 use crate::simulation::population::fitness::Fitness;
-use crate::simulation::population::genes::{Bool, Gene, Chromosome, Int, Perm, Real};
+use crate::simulation::population::genes::{Bool, Chromosome, Gene, Int, Perm, Real};
 use crate::simulation::population::run_condition::population_type;
 use crate::simulation::{SimulationSchedule, SimulationSet};
 

@@ -1,5 +1,5 @@
 [simulation]
-target_generation = 100
+target_generation = 10
 
 [population]
 dim = 8

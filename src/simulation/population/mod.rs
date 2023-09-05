@@ -1,3 +1,4 @@
+pub mod objective;
 pub mod fitness;
 pub mod genes;
 pub mod individual;

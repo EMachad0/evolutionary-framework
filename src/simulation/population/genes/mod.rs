@@ -23,7 +23,7 @@ pub trait Chromosome: 'static + Sync + Send + Clone {
 }
 
 #[derive(Debug, Clone, Component, Reflect)]
-pub struct Gene<G: Chromosome>(G);
+pub struct Gene<G: Chromosome>(pub G);
 
 impl<G: Chromosome> Gene<G> {
     pub fn get(&self) -> &Vec<G::G> {

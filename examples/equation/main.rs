@@ -7,6 +7,7 @@ mod config;
 mod fitness;
 mod function;
 mod individual;
+mod objective;
 
 use bevy::prelude::*;
 use bevy::DefaultPlugins;
@@ -36,6 +37,7 @@ fn main() {
             cartesian_plane::CartesianPlanePlugin,
             function::FunctionPlugin,
             individual::IndividualPlugin,
+            objective::ObjectivePlugin,
             fitness::FitnessPlugin,
             config::ConfigPlugin,
         ))

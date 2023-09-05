@@ -2,6 +2,7 @@
 #![cfg_attr(not(debug_assertions), windows_subsystem = "windows")]
 
 mod config;
+mod objective;
 mod fitness;
 
 use bevy::prelude::*;
@@ -29,6 +30,7 @@ fn main() {
         .add_plugins((
             EvolutionaryFrameworkPlugin,
             config::ConfigPlugin,
+            objective::ObjectivePlugin,
             fitness::FitnessPlugin,
         ))
         .add_systems(Startup, set_window_icon)
