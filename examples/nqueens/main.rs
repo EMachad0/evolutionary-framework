@@ -11,8 +11,9 @@ mod queen;
 use bevy::prelude::*;
 use bevy::DefaultPlugins;
 
-use evolutionary_framework::simulation::population::individual::Individual;
-use evolutionary_framework::simulation::selected_individuals::select_random_individual;
+use evolutionary_framework::simulation::selected_individuals::select_best_individual;
+use evolutionary_framework::simulation::simulation_state::is_simulation_paused;
+use evolutionary_framework::simulation::{SimulationSchedule, SimulationSet};
 use evolutionary_framework::window::set_window_icon;
 use evolutionary_framework::{EvolutionaryFrameworkPlugin, GameState};
 
@@ -53,13 +54,17 @@ fn main() {
         .add_systems(
             PreUpdate,
             (
-                select_random_individual
-                    .run_if(any_with_component::<Individual>().and_then(run_once())),
                 board_position::transform_from_board_position,
                 board::update_board_if_resize,
                 queen::queens_from_selected_individual,
             )
                 .run_if(in_state(GameState::Playing)),
+        )
+        .add_systems(
+            SimulationSchedule,
+            select_best_individual
+                .run_if(not(is_simulation_paused))
+                .after(SimulationSet::Fitness),
         )
         .run();
 }

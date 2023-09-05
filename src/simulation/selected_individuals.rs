@@ -3,6 +3,7 @@ use bevy::utils::HashSet;
 use rand::seq::IteratorRandom;
 use rand::thread_rng;
 
+use crate::simulation::population::fitness::Fitness;
 use crate::simulation::population::individual::Individual;
 
 pub struct SelectedIndividualsPlugin;
@@ -53,4 +54,16 @@ pub fn select_random_individual(
             break;
         }
     }
+}
+
+pub fn select_best_individual(
+    mut selection: ResMut<SelectedIndividuals>,
+    query: Query<(Entity, &Fitness)>,
+) {
+    let (entity, _) = query
+        .iter()
+        .max_by(|(_, a), (_, b)| a.get().total_cmp(&b.get()))
+        .unwrap();
+
+    selection.replace(entity);
 }
