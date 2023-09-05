@@ -3,6 +3,7 @@ use bevy::prelude::*;
 use crate::simulation::fixed_timestep::SimulationStep;
 use crate::simulation::generation_counter::GenerationCounter;
 use crate::simulation::simulation_state::SimulationState;
+use crate::simulation::simulation_timer::SimulationTimer;
 
 #[derive(Debug, Default, Resource, Reflect)]
 #[reflect(Resource)]
@@ -33,6 +34,17 @@ pub fn ui_for_controls(world: &mut World, ui: &mut egui::Ui) {
     let horizontal_ratio = 0.6;
     let mut simulation_state = cell.resource_mut::<SimulationState>();
     ui.toggle_value(&mut simulation_state.paused, "Pause");
+
+    let simulation_timer = cell.resource::<SimulationTimer>();
+    ui.horizontal(|ui| {
+        ui.add_sized(
+            egui::Vec2::new(ui.available_width() * horizontal_ratio, 0.),
+            egui::Label::new("Elapsed Time:"),
+        );
+        ui.add(egui::Label::new(
+            simulation_timer.elapsed_secs_f64().round().to_string(),
+        ));
+    });
 
     let mut generation_counter = cell.resource_mut::<GenerationCounter>();
     ui.horizontal(|ui| {

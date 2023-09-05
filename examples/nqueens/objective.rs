@@ -38,7 +38,7 @@ impl fmt::Display for NQueensObjective {
 }
 
 pub fn calc_objective(mut query: Query<(&mut NQueensObjective, &Gene<Perm>)>) {
-    for (mut objective, gene) in query.iter_mut() {
+    query.par_iter_mut().for_each_mut(|(mut objective, gene)| {
         let perm = gene.get();
         let n = perm.len();
         let mut diagonals1: Vec<i32> = vec![0; n * 2];
@@ -54,5 +54,5 @@ pub fn calc_objective(mut query: Query<(&mut NQueensObjective, &Gene<Perm>)>) {
         }
 
         objective.collisions = collisions;
-    }
+    });
 }

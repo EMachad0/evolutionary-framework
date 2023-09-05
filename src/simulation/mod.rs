@@ -6,6 +6,7 @@ pub mod generation_counter;
 pub mod population;
 pub mod selected_individuals;
 pub mod simulation_state;
+pub mod simulation_timer;
 
 use bevy::ecs::schedule::ScheduleLabel;
 use bevy::input::common_conditions::input_just_pressed;
@@ -56,6 +57,7 @@ impl Plugin for SimulationPlugin {
                 generation_counter::GenerationCounterPlugin,
                 early_stop::EarlyStopPlugin,
                 fitness_diagnostics::FitnessDiagnosticsPlugin,
+                simulation_timer::SimulationTimerPlugin,
             ));
     }
 }

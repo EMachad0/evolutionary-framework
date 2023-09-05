@@ -64,7 +64,7 @@ impl TabUiState {
             0.75,
             vec![UiWindows::Individuals, UiWindows::Inspector],
         );
-        let [_inspector, _controls] = tree.split_below(inspector, 0.75, vec![UiWindows::Controls]);
+        let [_inspector, _controls] = tree.split_below(inspector, 0.7, vec![UiWindows::Controls]);
 
         Self { tree }
     }
