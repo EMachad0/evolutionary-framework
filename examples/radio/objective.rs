@@ -18,7 +18,7 @@ impl Plugin for ObjectivePlugin {
         )
         .add_systems(
             SimulationSchedule,
-            calc_objective.in_set(SimulationSet::Decoding),
+            calc_objective.in_set(SimulationSet::Objective),
         )
         .add_systems(PostUpdate, update_name_from_objective::<RadioObjective>);
     }

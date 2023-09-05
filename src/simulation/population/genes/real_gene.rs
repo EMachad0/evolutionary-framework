@@ -26,6 +26,10 @@ impl Chromosome for Real {
         &mut self.0
     }
 
+    fn crossover(&mut self, _other: &mut Self, _prob: f64) {
+        todo!()
+    }
+
     fn mutate(&mut self, _prob: f64) {
         todo!()
     }

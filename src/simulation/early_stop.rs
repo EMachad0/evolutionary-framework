@@ -3,16 +3,21 @@ use itertools::Itertools;
 
 use crate::simulation::population::fitness::Fitness;
 use crate::simulation::simulation_state::pause_simulation;
+use crate::simulation::{generation_counter, SimulationSchedule, SimulationSet};
 
 pub struct EarlyStopPlugin;
 
 impl Plugin for EarlyStopPlugin {
     fn build(&self, app: &mut App) {
         app.add_systems(
-            PostUpdate,
+            SimulationSchedule,
             (
-                pause_simulation.run_if(is_converged),
-                pause_simulation.run_if(is_optimized),
+                pause_simulation
+                    .run_if(is_optimized)
+                    .after(SimulationSet::Fitness),
+                pause_simulation
+                    .run_if(generation_counter::counter_just_finished)
+                    .after(generation_counter::update_counter),
             ),
         );
     }

@@ -14,7 +14,7 @@ use bevy::prelude::*;
 #[derive(Debug, Hash, Copy, Clone, PartialEq, Eq, SystemSet)]
 pub enum SimulationSet {
     PopulationStart,
-    Decoding,
+    Objective,
     Fitness,
     Elitism,
     Selection,
@@ -33,7 +33,7 @@ impl Plugin for SimulationPlugin {
             .configure_sets(
                 SimulationSchedule,
                 (
-                    SimulationSet::Decoding,
+                    SimulationSet::Objective,
                     SimulationSet::Fitness,
                     SimulationSet::Elitism,
                     SimulationSet::Selection,
@@ -44,13 +44,8 @@ impl Plugin for SimulationPlugin {
             )
             .add_systems(
                 PostUpdate,
-                simulation_state::pause_simulation.run_if(input_just_pressed(KeyCode::Space)),
-            )
-            .add_systems(
-                SimulationSchedule,
-                simulation_state::pause_simulation
-                    .after(generation_counter::update_counter)
-                    .run_if(generation_counter::counter_just_finished),
+                simulation_state::toggle_pause_simulation
+                    .run_if(input_just_pressed(KeyCode::Space)),
             )
             .add_plugins((
                 simulation_state::SimulationStatePlugin,

@@ -1,25 +1,28 @@
 use bevy::prelude::*;
 
+use crate::objective::NQueensObjective;
+use evolutionary_framework::config::Config;
 use evolutionary_framework::simulation::population::fitness::Fitness;
-use evolutionary_framework::simulation::population::genes::{Gene, Perm};
+use evolutionary_framework::simulation::{SimulationSchedule, SimulationSet};
 
-pub fn calc_fitness(mut individuals: Query<(&Gene<Perm>, &mut Fitness)>) {
-    for (individual, mut fitness) in individuals.iter_mut() {
-        let perm = individual.get();
-        let n = perm.len();
-        let mut diagonals1: Vec<i32> = vec![0; n * 2];
-        let mut diagonals2: Vec<i32> = vec![0; n * 2];
-        let mut value = 0;
+pub struct FitnessPlugin;
 
-        for (x, y) in perm.iter().enumerate() {
-            let y = *y as usize;
-            value += diagonals1[n + x - y];
-            value += diagonals2[x + y];
-            diagonals1[n + x - y] += 1;
-            diagonals2[x + y] += 1;
-        }
+impl Plugin for FitnessPlugin {
+    fn build(&self, app: &mut App) {
+        app.add_systems(
+            SimulationSchedule,
+            calc_fitness.in_set(SimulationSet::Fitness),
+        );
+    }
+}
 
-        let worst_case = n * (n - 1) / 2;
-        fitness.set((worst_case as i32 - value) as f64 / worst_case as f64);
+pub fn calc_fitness(
+    mut individuals: Query<(&NQueensObjective, &mut Fitness)>,
+    config: Res<Config>,
+) {
+    let n = config.population.dim as i32;
+    let worst_case = n * (n - 1) / 2;
+    for (objective, mut fitness) in individuals.iter_mut() {
+        fitness.set((worst_case - objective.collisions) as f64 / worst_case as f64);
     }
 }

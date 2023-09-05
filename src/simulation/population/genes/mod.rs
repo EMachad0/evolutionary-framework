@@ -18,7 +18,7 @@ pub trait Chromosome: 'static + Sync + Send + Clone {
     fn new(dim: usize, input: &Self::I) -> Self;
     fn get(&self) -> &Vec<Self::G>;
     fn get_mut(&mut self) -> &mut Vec<Self::G>;
-
+    fn crossover(&mut self, other: &mut Self, prob: f64);
     fn mutate(&mut self, prob: f64);
 }
 
@@ -32,6 +32,10 @@ impl<G: Chromosome> Gene<G> {
 
     pub fn get_mut(&mut self) -> &mut Vec<G::G> {
         self.0.get_mut()
+    }
+
+    pub fn crossover(&mut self, other: &mut Gene<G>, prob: f64) {
+        self.0.crossover(&mut other.0, prob);
     }
 
     pub fn mutate(&mut self, prob: f64) {

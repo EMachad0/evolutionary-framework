@@ -9,6 +9,7 @@ pub struct GenerationCounterPlugin;
 impl Plugin for GenerationCounterPlugin {
     fn build(&self, app: &mut App) {
         app.register_type::<GenerationCounter>()
+            .init_resource::<GenerationCounter>()
             .add_systems(OnEnter(GameState::Playing), init_generation_counter)
             .add_systems(SimulationSchedule, update_counter);
     }

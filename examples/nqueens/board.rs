@@ -53,10 +53,10 @@ pub fn update_board_if_resize(
     cameras: Query<&Camera, (With<MainCamera>, Changed<Camera>)>,
     mut query: Query<(&mut Transform, &mut Sprite, &BoardPosition)>,
 ) {
-    let (width, height): (f32, f32) = {
-        let camera = cameras.single();
-        camera.logical_viewport_size().unwrap().into()
+    let Ok(camera) = cameras.get_single() else {
+        return;
     };
+    let (width, height): (f32, f32) = camera.logical_viewport_size().unwrap().into();
 
     let board_size = width.min(height) - BOARD_BORDER;
     let rect = Rect::new(

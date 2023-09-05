@@ -4,6 +4,7 @@ use bevy_egui::{EguiContext, EguiSet};
 use bevy_inspector_egui::{bevy_inspector::ui_for_world, DefaultInspectorConfigPlugin};
 use egui_dock::{DockArea, NodeIndex, Style, TabBarStyle, Tree};
 
+use crate::simulation::fixed_timestep::SimulationStep;
 use crate::simulation::generation_counter::GenerationCounter;
 use crate::ui::tabs::ui_for_controls::{
     update_ui_state_generation_counter, update_ui_state_steps_per_second, ControlsUiState,
@@ -33,9 +34,10 @@ impl Plugin for TabsPlugin {
                 PostUpdate,
                 (
                     update_ui_state_generation_counter
-                        .run_if(resource_added::<GenerationCounter>()),
-                    update_ui_state_steps_per_second.run_if(resource_added::<FixedTime>()),
-                ),
+                        .run_if(resource_changed::<GenerationCounter>()),
+                    update_ui_state_steps_per_second.run_if(resource_changed::<SimulationStep>()),
+                )
+                    .run_if(in_state(GameState::Playing)),
             );
     }
 }

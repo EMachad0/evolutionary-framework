@@ -1,6 +1,6 @@
 use bevy::prelude::*;
-use std::time::Duration;
 
+use crate::simulation::fixed_timestep::SimulationStep;
 use crate::simulation::generation_counter::GenerationCounter;
 use crate::simulation::simulation_state::SimulationState;
 
@@ -20,17 +20,9 @@ pub fn update_ui_state_generation_counter(
 
 pub fn update_ui_state_steps_per_second(
     mut ui_state: ResMut<ControlsUiState>,
-    fixed_time: Res<FixedTime>,
+    step: Res<SimulationStep>,
 ) {
-    ui_state.steps_per_second = duration_to_sps(fixed_time.period).round().to_string();
-}
-
-fn sps_to_duration(sps: f64) -> Duration {
-    Duration::from_secs_f64(1. / sps)
-}
-
-fn duration_to_sps(duration: Duration) -> f64 {
-    1. / duration.as_secs_f64()
+    ui_state.steps_per_second = format!("{:.2}", step.steps_per_second);
 }
 
 pub fn ui_for_controls(world: &mut World, ui: &mut egui::Ui) {
@@ -74,7 +66,7 @@ pub fn ui_for_controls(world: &mut World, ui: &mut egui::Ui) {
         }
     });
 
-    let mut fixed_time = cell.resource_mut::<FixedTime>();
+    let mut step = cell.resource_mut::<SimulationStep>();
     ui.horizontal(|ui| {
         ui.add_sized(
             egui::Vec2::new(ui.available_width() * horizontal_ratio, 0.),
@@ -88,15 +80,14 @@ pub fn ui_for_controls(world: &mut World, ui: &mut egui::Ui) {
             if ui.input(|i| i.key_pressed(egui::Key::Enter)) {
                 match ui_state.steps_per_second.parse::<f64>() {
                     Ok(val) => {
-                        fixed_time.period = sps_to_duration(val);
+                        step.steps_per_second = val;
                     }
                     Err(_) => {
-                        ui_state.steps_per_second =
-                            duration_to_sps(fixed_time.period).round().to_string();
+                        ui_state.steps_per_second = format!("{:.2}", step.steps_per_second);
                     }
                 }
             } else {
-                ui_state.steps_per_second = duration_to_sps(fixed_time.period).round().to_string();
+                ui_state.steps_per_second = format!("{:.2}", step.steps_per_second);
             }
         }
     });

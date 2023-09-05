@@ -1,7 +1,5 @@
 use bevy::prelude::*;
 use itertools::Itertools;
-use rand::distributions::Uniform;
-use rand::prelude::*;
 
 use crate::config::Config;
 use crate::simulation::evolutionary_steps::elitism::Elitism;
@@ -35,21 +33,9 @@ pub fn crossover<G: Chromosome>(
     config: Res<Config>,
     mut query: Query<&mut Gene<G>, Without<Elitism>>,
 ) {
-    let mut rng = thread_rng();
-    let cut_rng = Uniform::new(1, config.population.dim - 1);
     let mut population = query.iter_mut().collect_vec();
     for gs in population.chunks_exact_mut(2) {
-        if rng.gen_bool(config.selection.crossover_prob) {
-            let [a, b]: &mut [_; 2] = gs.try_into().unwrap();
-
-            let a_gene = a.get_mut();
-            let b_gene = b.get_mut();
-
-            let cut = cut_rng.sample(&mut rng);
-
-            let a_tail = a_gene.split_off(cut);
-            let x = b_gene.splice(cut.., a_tail);
-            a_gene.extend(x);
-        }
+        let [a, b]: &mut [_; 2] = gs.try_into().unwrap();
+        a.crossover(b, config.selection.crossover_prob);
     }
 }

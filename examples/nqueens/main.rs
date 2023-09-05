@@ -5,6 +5,7 @@ mod board;
 mod board_position;
 mod fitness;
 mod loading;
+mod objective;
 mod queen;
 
 use bevy::prelude::*;
@@ -12,7 +13,6 @@ use bevy::DefaultPlugins;
 
 use evolutionary_framework::simulation::population::individual::Individual;
 use evolutionary_framework::simulation::selected_individuals::select_random_individual;
-use evolutionary_framework::simulation::{SimulationSchedule, SimulationSet};
 use evolutionary_framework::window::set_window_icon;
 use evolutionary_framework::{EvolutionaryFrameworkPlugin, GameState};
 
@@ -34,7 +34,12 @@ fn main() {
             }),
             ..default()
         }))
-        .add_plugins((EvolutionaryFrameworkPlugin, loading::LoadingPlugin))
+        .add_plugins((
+            EvolutionaryFrameworkPlugin,
+            loading::LoadingPlugin,
+            objective::ObjectivePlugin,
+            fitness::FitnessPlugin,
+        ))
         .register_type::<board_position::BoardPosition>()
         .add_systems(Startup, set_window_icon)
         .add_systems(
@@ -44,10 +49,6 @@ fn main() {
                 (board::spawn_board_cells, queen::spawn_queens),
             )
                 .chain(),),
-        )
-        .add_systems(
-            SimulationSchedule,
-            fitness::calc_fitness.in_set(SimulationSet::Fitness),
         )
         .add_systems(
             PreUpdate,

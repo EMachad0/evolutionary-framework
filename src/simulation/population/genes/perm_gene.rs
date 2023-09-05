@@ -1,6 +1,6 @@
 use bevy::prelude::Reflect;
 use rand::seq::SliceRandom;
-use rand::thread_rng;
+use rand::{thread_rng, Rng};
 
 use crate::simulation::population::genes::Chromosome;
 
@@ -26,7 +26,18 @@ impl Chromosome for Perm {
         &mut self.0
     }
 
-    fn mutate(&mut self, _prob: f64) {
-        todo!()
+    fn crossover(&mut self, _other: &mut Self, _prob: f64) {
+        // todo!()
+    }
+
+    fn mutate(&mut self, prob: f64) {
+        let perm = self.get_mut();
+        let mut rng = thread_rng();
+        for i in 0..perm.len() {
+            if rng.gen_bool(prob) {
+                let j = rng.gen_range(0..perm.len());
+                perm.swap(i, j);
+            }
+        }
     }
 }
