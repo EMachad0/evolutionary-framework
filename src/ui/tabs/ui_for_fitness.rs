@@ -17,7 +17,7 @@ pub fn ui_for_fitness(world: &mut World, ui: &mut egui::Ui) {
         Line::new(over_time)
     };
 
-    Plot::new("Fitness").view_aspect(2.0).show(ui, |plot_ui| {
+    Plot::new("Fitness").show(ui, |plot_ui| {
         plot_ui.line(best_line);
         plot_ui.line(avg_line);
     });
