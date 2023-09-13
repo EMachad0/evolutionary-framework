@@ -14,7 +14,8 @@ impl Plugin for SimulationTimerPlugin {
                 PostUpdate,
                 update_simulation_timer
                     .run_if(in_state(GameState::Playing).and_then(not(is_simulation_paused))),
-            );
+            )
+            .add_systems(OnEnter(GameState::Playing), reset_simulation_timer);
     }
 }
 
@@ -24,4 +25,9 @@ pub struct SimulationTimer(Stopwatch);
 
 pub fn update_simulation_timer(mut timer: ResMut<SimulationTimer>, time: Res<Time>) {
     timer.tick(time.delta());
+}
+
+pub fn reset_simulation_timer(mut timer: ResMut<SimulationTimer>) {
+    timer.unpause();
+    timer.reset();
 }

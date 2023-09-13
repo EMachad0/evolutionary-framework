@@ -38,6 +38,7 @@ pub struct SelectionConfig {
 pub struct SimulationConfig {
     pub target_generation: u64,
     pub steps_per_second: f64,
+    pub runs: u64,
 }
 
 impl Default for SimulationConfig {
@@ -45,6 +46,7 @@ impl Default for SimulationConfig {
         Self {
             target_generation: 0,
             steps_per_second: DEFAULT_STEPS_PER_SECOND,
+            runs: 0,
         }
     }
 }
@@ -62,23 +64,25 @@ pub struct ConfigPlugin;
 
 pub const CONFIG_SCHEDULE: OnExit<GameState> = OnExit(GameState::Loading);
 
+#[derive(Debug, Hash, Copy, Clone, PartialEq, Eq, SystemSet)]
+pub struct ConfigSet;
+
 impl Plugin for ConfigPlugin {
     fn build(&self, app: &mut App) {
-        app.register_type::<Config>();
+        app.register_type::<Config>()
+            .configure_set(CONFIG_SCHEDULE, ConfigSet);
     }
 }
 
-pub trait ConfigToml {
+pub trait ConfigToml: Resource {
     fn handle(&self) -> &Handle<TomlAsset>;
 }
 
-pub fn parse_config<T: ConfigToml + Resource>(
-    mut commands: Commands,
-    config_toml: Res<T>,
-    toml_assets: Res<Assets<TomlAsset>>,
-) {
+pub fn parse_config<T: ConfigToml>(world: &mut World) {
+    let config_toml: &T = world.resource::<T>();
+    let toml_assets = world.resource::<Assets<TomlAsset>>();
     let handle = config_toml.handle();
     let content = toml_assets.get(handle).expect("Config Toml not loaded!");
     let config: Config = toml::from_str(&content.0).unwrap();
-    commands.insert_resource(config);
+    world.insert_resource(config);
 }

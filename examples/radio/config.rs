@@ -1,7 +1,7 @@
 use bevy::prelude::*;
 use bevy_asset_loader::prelude::*;
 
-use evolutionary_framework::config::{parse_config, ConfigToml, CONFIG_SCHEDULE};
+use evolutionary_framework::config::{parse_config, ConfigSet, ConfigToml, CONFIG_SCHEDULE};
 use evolutionary_framework::toml_asset::TomlAsset;
 use evolutionary_framework::GameState;
 
@@ -10,7 +10,10 @@ pub struct ConfigPlugin;
 impl Plugin for ConfigPlugin {
     fn build(&self, app: &mut App) {
         app.add_collection_to_loading_state::<_, ConfigAssets>(GameState::Loading)
-            .add_systems(CONFIG_SCHEDULE, parse_config::<ConfigAssets>);
+            .add_systems(
+                CONFIG_SCHEDULE,
+                parse_config::<ConfigAssets>.in_set(ConfigSet),
+            );
     }
 }
 

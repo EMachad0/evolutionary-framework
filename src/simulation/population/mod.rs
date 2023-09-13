@@ -1,13 +1,14 @@
-pub mod objective;
 pub mod fitness;
 pub mod genes;
 pub mod individual;
 pub mod init_params;
+pub mod objective;
 pub mod run_condition;
 pub mod spawn_population;
 
 use bevy::prelude::*;
 
+use crate::despawn::despawn;
 use crate::simulation::population::fitness::Fitness;
 use crate::simulation::population::genes::{Bool, Gene, Int, Perm, Real};
 use crate::simulation::population::individual::Individual;
@@ -42,6 +43,7 @@ impl Plugin for PopulationPlugin {
                 )
                     .chain()
                     .in_set(SimulationSet::PopulationStart),
-            );
+            )
+            .add_systems(OnExit(GameState::Playing), despawn::<Individual>);
     }
 }

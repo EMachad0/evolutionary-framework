@@ -11,6 +11,8 @@ mod queen;
 use bevy::prelude::*;
 use bevy::DefaultPlugins;
 
+use crate::board_position::BoardPosition;
+use evolutionary_framework::despawn::despawn;
 use evolutionary_framework::simulation::selected_individuals::select_best_individual;
 use evolutionary_framework::simulation::simulation_state::is_simulation_paused;
 use evolutionary_framework::simulation::{SimulationSchedule, SimulationSet};
@@ -66,5 +68,6 @@ fn main() {
                 .run_if(not(is_simulation_paused))
                 .after(SimulationSet::Fitness),
         )
+        .add_systems(OnExit(GameState::Playing), despawn::<BoardPosition>)
         .run();
 }

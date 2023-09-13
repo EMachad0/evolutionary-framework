@@ -9,6 +9,7 @@ use crate::simulation::generation_counter::GenerationCounter;
 use crate::ui::tabs::ui_for_controls::{
     update_ui_state_generation_counter, update_ui_state_steps_per_second, ControlsUiState,
 };
+use crate::ui::tabs::ui_for_simulation::reset_cam_viewport;
 use crate::ui::tabs::{ui_for_controls, ui_for_fitness, ui_for_individuals, ui_for_simulation};
 use crate::GameState;
 
@@ -38,7 +39,8 @@ impl Plugin for TabsPlugin {
                     update_ui_state_steps_per_second.run_if(resource_changed::<SimulationStep>()),
                 )
                     .run_if(in_state(GameState::Playing)),
-            );
+            )
+            .add_systems(OnExit(GameState::Playing), reset_cam_viewport);
     }
 }
 

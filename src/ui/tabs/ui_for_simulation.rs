@@ -28,3 +28,8 @@ pub fn ui_for_simulation(world: &mut World, ui: &mut egui::Ui) {
         depth: 0.0..1.0,
     });
 }
+
+pub fn reset_cam_viewport(mut cameras: Query<&mut Camera, With<MainCamera>>) {
+    let mut cam = cameras.single_mut();
+    cam.viewport = None;
+}

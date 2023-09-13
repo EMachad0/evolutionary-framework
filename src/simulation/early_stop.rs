@@ -2,7 +2,7 @@ use bevy::prelude::*;
 use itertools::Itertools;
 
 use crate::simulation::population::fitness::Fitness;
-use crate::simulation::simulation_state::pause_simulation;
+use crate::simulation::simulation_state::end_simulation;
 use crate::simulation::{generation_counter, SimulationSchedule, SimulationSet};
 
 pub struct EarlyStopPlugin;
@@ -12,10 +12,10 @@ impl Plugin for EarlyStopPlugin {
         app.add_systems(
             SimulationSchedule,
             (
-                pause_simulation
+                end_simulation
                     .run_if(is_optimized)
                     .after(SimulationSet::Fitness),
-                pause_simulation
+                end_simulation
                     .run_if(generation_counter::counter_just_finished)
                     .after(generation_counter::update_counter),
             ),

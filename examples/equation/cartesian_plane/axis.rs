@@ -17,79 +17,77 @@ pub struct Axis;
 
 pub fn update_plane_axis(
     mut commands: Commands,
-    axis_config: Option<ResMut<AxisConfig>>,
+    axis_config: ResMut<AxisConfig>,
     axis: Query<Entity, With<Axis>>,
     plane: Query<&Plane>,
     mut meshes: ResMut<Assets<Mesh>>,
     mut materials: ResMut<Assets<ColorMaterial>>,
 ) {
-    if let Some(axis_config) = axis_config {
-        let entity = axis.single();
+    let entity = axis.single();
 
-        let AxisConfig {
-            thickness,
-            alpha,
-            length,
-        } = *axis_config;
+    let AxisConfig {
+        thickness,
+        alpha,
+        length,
+    } = *axis_config;
 
-        let Plane { scale } = *plane.single();
+    let Plane { scale } = *plane.single();
 
-        let x_axis_color = Color::RED.with_a(alpha);
-        let y_axis_color = Color::GREEN.with_a(alpha);
+    let x_axis_color = Color::RED.with_a(alpha);
+    let y_axis_color = Color::GREEN.with_a(alpha);
 
-        let x_axis_entity = commands
-            .spawn((
-                Name::new("X axis"),
-                SpriteBundle {
-                    sprite: Sprite {
-                        color: x_axis_color,
-                        custom_size: Some(Vec2::new(length * scale, thickness)),
-                        anchor: Anchor::CenterLeft,
-                        ..default()
-                    },
+    let x_axis_entity = commands
+        .spawn((
+            Name::new("X axis"),
+            SpriteBundle {
+                sprite: Sprite {
+                    color: x_axis_color,
+                    custom_size: Some(Vec2::new(length * scale, thickness)),
+                    anchor: Anchor::CenterLeft,
                     ..default()
                 },
-            ))
-            .with_children(|parent| {
-                parent.spawn(MaterialMesh2dBundle {
-                    mesh: meshes
-                        .add(shape::RegularPolygon::new(2. * thickness, 3).into())
-                        .into(),
-                    material: materials.add(ColorMaterial::from(x_axis_color)),
-                    transform: Transform::from_xyz(length * scale, 0., 0.)
-                        .with_rotation(Quat::from_rotation_z(-PI / 2.)),
-                    ..default()
-                });
-            })
-            .id();
-        let y_axis_entity = commands
-            .spawn((
-                Name::new("Y axis"),
-                SpriteBundle {
-                    sprite: Sprite {
-                        color: y_axis_color,
-                        custom_size: Some(Vec2::new(thickness, length * scale)),
-                        anchor: Anchor::BottomCenter,
-                        ..default()
-                    },
+                ..default()
+            },
+        ))
+        .with_children(|parent| {
+            parent.spawn(MaterialMesh2dBundle {
+                mesh: meshes
+                    .add(shape::RegularPolygon::new(2. * thickness, 3).into())
+                    .into(),
+                material: materials.add(ColorMaterial::from(x_axis_color)),
+                transform: Transform::from_xyz(length * scale, 0., 0.)
+                    .with_rotation(Quat::from_rotation_z(-PI / 2.)),
+                ..default()
+            });
+        })
+        .id();
+    let y_axis_entity = commands
+        .spawn((
+            Name::new("Y axis"),
+            SpriteBundle {
+                sprite: Sprite {
+                    color: y_axis_color,
+                    custom_size: Some(Vec2::new(thickness, length * scale)),
+                    anchor: Anchor::BottomCenter,
                     ..default()
                 },
-            ))
-            .with_children(|parent| {
-                parent.spawn(MaterialMesh2dBundle {
-                    mesh: meshes
-                        .add(shape::RegularPolygon::new(2. * thickness, 3).into())
-                        .into(),
-                    material: materials.add(ColorMaterial::from(y_axis_color)),
-                    transform: Transform::from_xyz(0., length * scale, 0.),
-                    ..default()
-                });
-            })
-            .id();
-        commands
-            .get_entity(entity)
-            .unwrap()
-            .replace_children(&[x_axis_entity, y_axis_entity]);
-        commands.remove_resource::<AxisConfig>();
-    }
+                ..default()
+            },
+        ))
+        .with_children(|parent| {
+            parent.spawn(MaterialMesh2dBundle {
+                mesh: meshes
+                    .add(shape::RegularPolygon::new(2. * thickness, 3).into())
+                    .into(),
+                material: materials.add(ColorMaterial::from(y_axis_color)),
+                transform: Transform::from_xyz(0., length * scale, 0.),
+                ..default()
+            });
+        })
+        .id();
+    commands
+        .get_entity(entity)
+        .unwrap()
+        .replace_children(&[x_axis_entity, y_axis_entity]);
+    commands.remove_resource::<AxisConfig>();
 }

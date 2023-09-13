@@ -41,9 +41,8 @@ impl fmt::Display for EquationObjective {
 
 pub fn calc_objective(
     mut query: Query<(&mut EquationObjective, &Gene<Bool>)>,
-    function: Query<&Function>,
+    function: Res<Function>,
 ) {
-    let function = function.single();
     let x_domain = function.x_domain;
     for (mut objective, gene) in query.iter_mut() {
         let x = gene_to_value(gene) * (x_domain.1 - x_domain.0) + x_domain.0;

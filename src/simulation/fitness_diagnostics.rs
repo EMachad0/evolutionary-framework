@@ -1,3 +1,4 @@
+use crate::GameState;
 use bevy::prelude::*;
 use itertools::Itertools;
 
@@ -15,11 +16,12 @@ pub struct FitnessDiagnosticsPlugin;
 
 impl Plugin for FitnessDiagnosticsPlugin {
     fn build(&self, app: &mut App) {
-        app.add_systems(
-            SimulationSchedule,
-            collect_diagnostics.after(SimulationSet::Fitness),
-        )
-        .init_resource::<FitnessHistory>();
+        app.init_resource::<FitnessHistory>()
+            .add_systems(OnEnter(GameState::Playing), init_history_diagnostics)
+            .add_systems(
+                SimulationSchedule,
+                collect_diagnostics.after(SimulationSet::Fitness),
+            );
     }
 }
 
@@ -34,4 +36,9 @@ fn collect_diagnostics(mut history: ResMut<FitnessHistory>, query: Query<&Fitnes
     history
         .avg
         .push(genes.iter().sum::<f64>() / genes.len() as f64);
+}
+
+fn init_history_diagnostics(mut history: ResMut<FitnessHistory>) {
+    history.avg.clear();
+    history.best.clear();
 }

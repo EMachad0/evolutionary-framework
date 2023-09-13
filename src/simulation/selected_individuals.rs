@@ -31,6 +31,10 @@ impl SelectedIndividuals {
         self.0.contains(entity)
     }
 
+    pub fn clear(&mut self) {
+        self.0.clear();
+    }
+
     pub fn select(&mut self, entity: Entity) {
         if !self.0.remove(&entity) {
             self.0.insert(entity);
@@ -66,4 +70,8 @@ pub fn select_best_individual(
         .unwrap();
 
     selection.replace(entity);
+}
+
+pub fn clean_selected_individuals(mut selection: ResMut<SelectedIndividuals>) {
+    selection.clear();
 }

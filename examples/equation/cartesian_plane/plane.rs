@@ -1,6 +1,6 @@
 use bevy::prelude::*;
 
-use crate::cartesian_plane::axis::Axis;
+use crate::cartesian_plane::axis::{Axis, AxisConfig};
 use crate::cartesian_plane::background::PlaneBackground;
 use crate::cartesian_plane::Graphs;
 
@@ -44,4 +44,9 @@ pub fn spawn_plane(mut commands: Commands) {
                 TransformBundle::from_transform(Transform::from_xyz(0., 0., 1.)),
             ));
         });
+    commands.insert_resource(AxisConfig {
+        thickness: 2.,
+        alpha: 0.3,
+        length: 1.,
+    });
 }
