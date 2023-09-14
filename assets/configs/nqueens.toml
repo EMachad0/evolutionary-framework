@@ -1,10 +1,10 @@
 [simulation]
-target_generation = 0
+target_generation = 1000
 steps_per_second = 1_000
-runs = 0
+runs = 10
 
 [population]
-dim = 128
+dim = 32
 size = 30
 
 [population.cod]

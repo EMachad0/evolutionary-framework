@@ -40,6 +40,6 @@ pub fn update_counter(mut counter: ResMut<GenerationCounter>) {
     counter.current += 1
 }
 
-pub fn counter_just_finished(counter: Res<GenerationCounter>) -> bool {
+pub fn generation_counter_just_finished(counter: Res<GenerationCounter>) -> bool {
     counter.current == counter.target
 }

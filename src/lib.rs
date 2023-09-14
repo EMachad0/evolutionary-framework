@@ -1,15 +1,14 @@
 #![allow(clippy::type_complexity)]
 
-mod auto_runner;
 pub mod camera;
 pub mod config;
+pub mod despawn;
 pub mod loading;
-pub mod run_counter;
+pub mod metrics;
 pub mod simulation;
 pub mod toml_asset;
 pub mod ui;
 pub mod window;
-pub mod despawn;
 
 use bevy::app::App;
 #[cfg(debug_assertions)]
@@ -34,9 +33,8 @@ impl Plugin for EvolutionaryFrameworkPlugin {
             loading::LoadingPlugin,
             simulation::SimulationPlugin,
             ui::UiPlugin::default(),
-            run_counter::RunCounterPlugin,
-            auto_runner::AutoRunnerPlugin,
             config::ConfigPlugin,
+            metrics::MetricsPlugin,
         ));
 
         #[cfg(debug_assertions)]

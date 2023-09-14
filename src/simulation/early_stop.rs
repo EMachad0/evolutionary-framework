@@ -1,3 +1,4 @@
+use crate::metrics::is_auto_runner;
 use bevy::prelude::*;
 use itertools::Itertools;
 
@@ -13,10 +14,10 @@ impl Plugin for EarlyStopPlugin {
             SimulationSchedule,
             (
                 end_simulation
-                    .run_if(is_optimized)
+                    .run_if(not(is_auto_runner).and_then(is_optimized))
                     .after(SimulationSet::Fitness),
                 end_simulation
-                    .run_if(generation_counter::counter_just_finished)
+                    .run_if(generation_counter::generation_counter_just_finished)
                     .after(generation_counter::update_counter),
             ),
         );

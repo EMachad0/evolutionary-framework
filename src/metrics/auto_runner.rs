@@ -1,6 +1,6 @@
 use bevy::prelude::*;
 
-use crate::run_counter::counter_finished;
+use crate::metrics::run_counter::counter_finished;
 use crate::simulation::simulation_state::is_simulation_finished;
 use crate::GameState;
 

@@ -3,7 +3,7 @@ use bevy::prelude::*;
 
 use crate::simulation::fixed_timestep::SimulationStep;
 use crate::simulation::generation_counter::GenerationCounter;
-use crate::simulation::simulation_state::SimulationState;
+use crate::simulation::simulation_state::{SimulationState, SimulationStateType};
 use crate::simulation::simulation_timer::SimulationTimer;
 
 #[derive(Debug, Default, Resource, Reflect)]
@@ -35,20 +35,19 @@ pub fn ui_for_controls(world: &mut World, ui: &mut egui::Ui) {
     let horizontal_ratio = 0.6;
 
     ui.horizontal(|ui| {
-        let state = cell.resource::<State<SimulationState>>();
-        let mut state_controller = cell.resource_mut::<NextState<SimulationState>>();
+        let mut state = cell.resource_mut::<SimulationState>();
         ui.label("State: ");
         ui.label(state.get().to_string());
         if ui.button("Run").clicked() {
-            state_controller.set(SimulationState::Running);
+            state.set(SimulationStateType::Running);
         }
         if ui.button("Pause").clicked() {
-            state_controller.set(SimulationState::Paused);
+            state.set(SimulationStateType::Paused);
         }
         if ui.button("End").clicked() {
-            state_controller.set(SimulationState::Finished);
-            let mut game_state_controller = cell.resource_mut::<NextState<GameState>>();
-            game_state_controller.set(GameState::Menu);
+            state.set(SimulationStateType::Finished);
+            let mut game_state = cell.resource_mut::<NextState<GameState>>();
+            game_state.set(GameState::Menu);
         }
     });
 

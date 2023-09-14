@@ -45,3 +45,7 @@ pub fn update_counter(mut counter: ResMut<RunCounter>) {
 pub fn counter_finished(counter: Res<RunCounter>) -> bool {
     counter.current >= counter.target
 }
+
+pub fn counter_just_finished(counter: Res<RunCounter>) -> bool {
+    counter.current == counter.target
+}

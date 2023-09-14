@@ -5,9 +5,9 @@ use itertools::Itertools;
 use crate::simulation::population::fitness::Fitness;
 use crate::simulation::{SimulationSchedule, SimulationSet};
 
-#[derive(Debug, Default, Resource, Reflect)]
+#[derive(Debug, Default, Clone, Resource, Reflect)]
 #[reflect(Resource)]
-pub struct FitnessHistory {
+pub struct FitnessDiagnostics {
     pub avg: Vec<f64>,
     pub best: Vec<f64>,
 }
@@ -16,7 +16,7 @@ pub struct FitnessDiagnosticsPlugin;
 
 impl Plugin for FitnessDiagnosticsPlugin {
     fn build(&self, app: &mut App) {
-        app.init_resource::<FitnessHistory>()
+        app.init_resource::<FitnessDiagnostics>()
             .add_systems(OnEnter(GameState::Playing), init_history_diagnostics)
             .add_systems(
                 SimulationSchedule,
@@ -25,7 +25,7 @@ impl Plugin for FitnessDiagnosticsPlugin {
     }
 }
 
-fn collect_diagnostics(mut history: ResMut<FitnessHistory>, query: Query<&Fitness>) {
+fn collect_diagnostics(mut history: ResMut<FitnessDiagnostics>, query: Query<&Fitness>) {
     let genes = query.iter().map(|f| f.get()).collect_vec();
     history.best.push(
         *genes
@@ -38,7 +38,7 @@ fn collect_diagnostics(mut history: ResMut<FitnessHistory>, query: Query<&Fitnes
         .push(genes.iter().sum::<f64>() / genes.len() as f64);
 }
 
-fn init_history_diagnostics(mut history: ResMut<FitnessHistory>) {
+fn init_history_diagnostics(mut history: ResMut<FitnessDiagnostics>) {
     history.avg.clear();
     history.best.clear();
 }

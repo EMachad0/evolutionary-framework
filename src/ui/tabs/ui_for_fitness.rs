@@ -3,12 +3,12 @@ use bevy::prelude::*;
 use egui::plot::{Line, Plot, PlotPoints};
 use itertools::Itertools;
 
-use crate::simulation::fitness_diagnostics::FitnessHistory;
+use crate::simulation::fitness_diagnostics::FitnessDiagnostics;
 
 const MAX_PLOT_POINTS: usize = 100;
 
 pub fn ui_for_fitness(world: &mut World, ui: &mut egui::Ui) {
-    let history = world.resource::<FitnessHistory>();
+    let history = world.resource::<FitnessDiagnostics>();
 
     let best_line = {
         let points = history
@@ -38,7 +38,6 @@ pub fn ui_for_fitness(world: &mut World, ui: &mut egui::Ui) {
 }
 
 fn points_to_ui(points: &Vec<DVec2>) -> PlotPoints {
-    debug!("points_to_ui");
     let chunk_size = (points.len() / MAX_PLOT_POINTS).max(1);
 
     let over_time: PlotPoints = points
