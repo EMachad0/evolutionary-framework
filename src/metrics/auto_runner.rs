@@ -1,6 +1,6 @@
 use bevy::prelude::*;
 
-use crate::metrics::run_counter::counter_finished;
+use crate::metrics::run_counter::run_counter_finished;
 use crate::simulation::simulation_state::is_simulation_finished;
 use crate::GameState;
 
@@ -10,14 +10,14 @@ impl Plugin for AutoRunnerPlugin {
     fn build(&self, app: &mut App) {
         app.add_systems(
             OnEnter(GameState::Menu),
-            start_simulation.run_if(not(counter_finished)),
+            start_simulation.run_if(not(run_counter_finished)),
         )
         .add_systems(
             PostUpdate,
             end_simulation.run_if(
                 in_state(GameState::Playing)
                     .and_then(is_simulation_finished)
-                    .and_then(not(counter_finished)),
+                    .and_then(not(run_counter_finished)),
             ),
         );
     }

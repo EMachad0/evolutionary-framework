@@ -32,7 +32,7 @@ pub fn mutation<G: Chromosome>(
     config: Res<Config>,
     mut query: Query<&mut Gene<G>, Without<Elitism>>,
 ) {
-    for mut gene in query.iter_mut() {
+    query.par_iter_mut().for_each_mut(|mut gene| {
         gene.mutate(config.selection.mutation_prob);
-    }
+    });
 }

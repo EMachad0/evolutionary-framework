@@ -11,7 +11,6 @@ mod queen;
 use bevy::prelude::*;
 use bevy::DefaultPlugins;
 
-use crate::board_position::BoardPosition;
 use evolutionary_framework::despawn::despawn;
 use evolutionary_framework::simulation::selected_individuals::select_best_individual;
 use evolutionary_framework::simulation::simulation_state::is_simulation_paused;
@@ -47,11 +46,12 @@ fn main() {
         .add_systems(Startup, set_window_icon)
         .add_systems(
             OnEnter(GameState::Playing),
-            ((
+            (
                 board::spawn_board,
                 (board::spawn_board_cells, queen::spawn_queens),
             )
-                .chain(),),
+                .chain()
+                .run_if(board::is_small_board_size),
         )
         .add_systems(
             PreUpdate,
@@ -60,7 +60,7 @@ fn main() {
                 board::update_board_if_resize,
                 queen::queens_from_selected_individual,
             )
-                .run_if(in_state(GameState::Playing)),
+                .run_if(in_state(GameState::Playing).and_then(resource_exists::<board::Board>())),
         )
         .add_systems(
             SimulationSchedule,
@@ -68,6 +68,9 @@ fn main() {
                 .run_if(not(is_simulation_paused))
                 .after(SimulationSet::Fitness),
         )
-        .add_systems(OnExit(GameState::Playing), despawn::<BoardPosition>)
+        .add_systems(
+            OnExit(GameState::Playing),
+            despawn::<board_position::BoardPosition>,
+        )
         .run();
 }

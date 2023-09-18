@@ -5,6 +5,7 @@ use evolutionary_framework::camera::MainCamera;
 use crate::board_position::BoardPosition;
 use evolutionary_framework::config::Config;
 
+const MAX_BOARD_SIZE: usize = 32;
 const BOARD_BORDER: f32 = 10.;
 
 #[derive(Default, Debug, Resource, Reflect)]
@@ -81,4 +82,8 @@ pub fn update_board_if_resize(
         ));
         sprite.custom_size = Some(Vec2::new(cell_size, cell_size));
     }
+}
+
+pub fn is_small_board_size(config: Res<Config>) -> bool {
+    config.population.dim <= MAX_BOARD_SIZE
 }

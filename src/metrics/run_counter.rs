@@ -13,7 +13,7 @@ impl Plugin for RunCounterPlugin {
                 OnExit(GameState::Loading),
                 init_run_counter.after(ConfigSet),
             )
-            .add_systems(OnExit(GameState::Playing), update_counter);
+            .add_systems(OnExit(GameState::Playing), update_run_counter);
     }
 }
 
@@ -38,14 +38,14 @@ pub fn init_run_counter(world: &mut World) {
     world.insert_resource(RunCounter::new(target))
 }
 
-pub fn update_counter(mut counter: ResMut<RunCounter>) {
+pub fn update_run_counter(mut counter: ResMut<RunCounter>) {
     counter.current += 1
 }
 
-pub fn counter_finished(counter: Res<RunCounter>) -> bool {
+pub fn run_counter_finished(counter: Res<RunCounter>) -> bool {
     counter.current >= counter.target
 }
 
-pub fn counter_just_finished(counter: Res<RunCounter>) -> bool {
+pub fn run_counter_just_finished(counter: Res<RunCounter>) -> bool {
     counter.current == counter.target
 }

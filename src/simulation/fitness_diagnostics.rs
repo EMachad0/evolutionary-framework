@@ -5,12 +5,9 @@ use itertools::Itertools;
 use crate::simulation::population::fitness::Fitness;
 use crate::simulation::{SimulationSchedule, SimulationSet};
 
-#[derive(Debug, Default, Clone, Resource, Reflect)]
+#[derive(Debug, Default, Clone, Deref, DerefMut, Resource, Reflect)]
 #[reflect(Resource)]
-pub struct FitnessDiagnostics {
-    pub avg: Vec<f64>,
-    pub best: Vec<f64>,
-}
+pub struct FitnessDiagnostics(Vec<Vec<f64>>);
 
 pub struct FitnessDiagnosticsPlugin;
 
@@ -27,18 +24,9 @@ impl Plugin for FitnessDiagnosticsPlugin {
 
 fn collect_diagnostics(mut history: ResMut<FitnessDiagnostics>, query: Query<&Fitness>) {
     let genes = query.iter().map(|f| f.get()).collect_vec();
-    history.best.push(
-        *genes
-            .iter()
-            .max_by(|a, b| a.partial_cmp(b).unwrap())
-            .unwrap(),
-    );
-    history
-        .avg
-        .push(genes.iter().sum::<f64>() / genes.len() as f64);
+    history.push(genes);
 }
 
 fn init_history_diagnostics(mut history: ResMut<FitnessDiagnostics>) {
-    history.avg.clear();
-    history.best.clear();
+    history.clear();
 }

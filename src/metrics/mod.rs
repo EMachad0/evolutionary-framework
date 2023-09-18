@@ -3,8 +3,7 @@ use bevy::prelude::*;
 use crate::config::Config;
 
 pub mod auto_runner;
-pub mod fitness_history;
-pub mod fitness_plot;
+pub mod fitness_csv;
 pub mod run_counter;
 
 pub struct MetricsPlugin;
@@ -14,8 +13,7 @@ impl Plugin for MetricsPlugin {
         app.add_plugins((
             auto_runner::AutoRunnerPlugin,
             run_counter::RunCounterPlugin,
-            fitness_history::RunsFitnessHistoryPlugin,
-            fitness_plot::FitnessPlotPlugin,
+            fitness_csv::FitnessCsvPlugin,
         ));
     }
 }

@@ -1,16 +1,16 @@
 [simulation]
-target_generation = 1000
+target_generation = 0
 steps_per_second = 1_000
-runs = 10
+runs = 1
 
 [population]
-dim = 32
-size = 30
+dim = 1024
+size = 50
 
 [population.cod]
 type = "Perm"
 
 [selection]
 elitism = 1
-crossover_prob = 0
-mutation_prob = 0.05
+crossover_prob = 0.8
+mutation_prob = 0.0001
