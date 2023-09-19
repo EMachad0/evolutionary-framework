@@ -2,7 +2,7 @@ use bevy::prelude::*;
 use itertools::Itertools;
 
 use crate::metrics::is_auto_runner;
-use crate::metrics::run_counter::RunCounter;
+use crate::metrics::run_counter::{update_run_counter, RunCounter};
 use crate::simulation::fitness_diagnostics::FitnessDiagnostics;
 use crate::GameState;
 
@@ -11,8 +11,10 @@ pub struct FitnessCsvPlugin;
 impl Plugin for FitnessCsvPlugin {
     fn build(&self, app: &mut App) {
         app.add_systems(
-            OnEnter(GameState::Menu),
-            generate_csv.run_if(is_auto_runner),
+            OnExit(GameState::Playing),
+            generate_csv
+                .run_if(is_auto_runner)
+                .after(update_run_counter),
         );
     }
 }

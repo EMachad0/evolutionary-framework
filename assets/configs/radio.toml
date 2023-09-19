@@ -1,5 +1,5 @@
 [simulation]
-target_generation = 10
+target_generation = 30
 steps_per_second = 5_000
 runs = 10
 
