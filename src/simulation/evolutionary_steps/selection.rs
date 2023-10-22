@@ -1,3 +1,4 @@
+use anyhow::Context;
 use bevy::prelude::*;
 use itertools::Itertools;
 use rand::prelude::*;
@@ -39,7 +40,13 @@ pub fn select<G: Chromosome>(
     for _ in 0..select_amount {
         let selected = population
             .choose_weighted(&mut rng, |(_, _, f)| f.get())
-            .unwrap();
+            .unwrap_or_else(|e| {
+                warn!("{}", e);
+                population
+                    .choose(&mut rng)
+                    .context("No Individual in population")
+                    .unwrap()
+            });
         let selected = selected.0.clone();
         new_population.push(selected)
     }

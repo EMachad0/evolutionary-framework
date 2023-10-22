@@ -1,0 +1,17 @@
+[simulation]
+target_generation = 1
+steps_per_second = 1_000
+runs = 0
+
+[population]
+dim = 100
+size = 10
+
+[population.cod]
+type = "Real"
+args = { range = [0, 1] }
+
+[selection]
+elitism = 1
+crossover_prob = 0
+mutation_prob = 0

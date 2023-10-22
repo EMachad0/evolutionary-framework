@@ -1,8 +1,8 @@
 use bevy::prelude::*;
 use bevy_asset_loader::prelude::*;
 
+use evolutionary_framework::assets::toml_asset::TomlAsset;
 use evolutionary_framework::config::{parse_config, ConfigSet, ConfigToml, CONFIG_SCHEDULE};
-use evolutionary_framework::toml_asset::TomlAsset;
 use evolutionary_framework::GameState;
 
 pub struct ConfigPlugin;

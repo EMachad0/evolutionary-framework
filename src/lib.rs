@@ -1,12 +1,12 @@
 #![allow(clippy::type_complexity)]
 
+pub mod assets;
 pub mod camera;
 pub mod config;
 pub mod despawn;
 pub mod loading;
 pub mod metrics;
 pub mod simulation;
-pub mod toml_asset;
 pub mod ui;
 pub mod window;
 
@@ -29,7 +29,7 @@ impl Plugin for EvolutionaryFrameworkPlugin {
     fn build(&self, app: &mut App) {
         app.add_state::<GameState>().add_plugins((
             camera::CameraPlugin,
-            toml_asset::TomlAssetPlugin,
+            assets::AssetsPlugin,
             loading::LoadingPlugin,
             simulation::SimulationPlugin,
             ui::UiPlugin::default(),

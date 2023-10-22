@@ -1,8 +1,8 @@
 use bevy::prelude::*;
 use serde::{Deserialize, Serialize};
 
+use crate::assets::toml_asset::TomlAsset;
 use crate::simulation::fixed_timestep::DEFAULT_STEPS_PER_SECOND;
-use crate::toml_asset::TomlAsset;
 use crate::GameState;
 
 #[derive(Default, Debug, Copy, Clone, PartialEq, Serialize, Deserialize, Reflect)]
