@@ -31,7 +31,7 @@ pub fn maze_from_asset(
 pub struct Maze {
     pub width: usize,
     pub height: usize,
-    pub data: Vec<bool>,
+    pub data: Vec<i8>,
 }
 
 impl Maze {
@@ -46,7 +46,6 @@ impl Maze {
                         v.parse::<i8>()
                             .context(format!("Unable to parse i8 from {:?}", v))
                             .unwrap()
-                            != 0
                     })
                     .collect_vec()
             })
@@ -63,7 +62,7 @@ impl Maze {
 }
 
 impl std::ops::Index<usize> for Maze {
-    type Output = [bool];
+    type Output = [i8];
 
     fn index(&self, index: usize) -> &Self::Output {
         let l = self.width * index;

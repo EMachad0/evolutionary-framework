@@ -14,11 +14,13 @@ pub fn spawn_board_cells(
         for j in 0..maze.width {
             let y = maze.height - i - 1;
             let x = j;
-            
-            let color = if maze[i][j] {
-                Color::WHITE
-            } else {
-                Color::BLACK
+
+            let color = match maze[i][j] {
+                0 => Color::BLACK,
+                1 => Color::WHITE,
+                2 => Color::GREEN,
+                3 => Color::RED,
+                _ => unreachable!(),
             };
 
             let entity = commands
