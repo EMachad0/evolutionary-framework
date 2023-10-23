@@ -31,6 +31,8 @@ pub fn maze_from_asset(
 pub struct Maze {
     pub width: usize,
     pub height: usize,
+    pub begin: (usize, usize),
+    pub end: (usize, usize),
     pub data: Vec<i8>,
 }
 
@@ -53,9 +55,24 @@ impl Maze {
 
         let width = data[0].len();
         let height = data.len();
+
+        let mut begin = None;
+        let mut end = None;
+        for i in 0..height {
+            for j in 0..width {
+                match data[i][j] {
+                    2 => begin = Some((j, i)),
+                    3 => end = Some((j, i)),
+                    _ => {}
+                };
+            }
+        }
+
         Maze {
             width,
             height,
+            begin: begin.expect("Unable to find begin position"),
+            end: end.expect("Unable to find end position"),
             data: data.into_iter().flatten().collect_vec(),
         }
     }
