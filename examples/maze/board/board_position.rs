@@ -2,7 +2,7 @@ use bevy::prelude::*;
 
 use crate::board::Board;
 
-#[derive(Debug, Copy, Clone, Component, Reflect)]
+#[derive(Debug, Default, Copy, Clone, Component, Reflect)]
 pub struct BoardPosition {
     pub x: usize,
     pub y: usize,

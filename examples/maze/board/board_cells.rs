@@ -12,7 +12,7 @@ pub fn spawn_board_cells(
     let mut cells: Vec<Entity> = Vec::new();
     for i in 0..maze.height {
         for j in 0..maze.width {
-            let y = maze.height - i - 1;
+            let y = i;
             let x = j;
 
             let color = match maze[i][j] {

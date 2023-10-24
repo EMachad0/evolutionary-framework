@@ -51,6 +51,7 @@ impl Maze {
                     })
                     .collect_vec()
             })
+            .rev()
             .collect_vec();
 
         let width = data[0].len();
@@ -58,6 +59,7 @@ impl Maze {
 
         let mut begin = None;
         let mut end = None;
+        #[allow(clippy::needless_range_loop)]
         for i in 0..height {
             for j in 0..width {
                 match data[i][j] {
@@ -74,6 +76,14 @@ impl Maze {
             begin: begin.expect("Unable to find begin position"),
             end: end.expect("Unable to find end position"),
             data: data.into_iter().flatten().collect_vec(),
+        }
+    }
+
+    pub fn get(&self, x: usize, y: usize) -> Option<i8> {
+        if x < self.width && y < self.height {
+            Some(self.data[y * self.width + x])
+        } else {
+            None
         }
     }
 }

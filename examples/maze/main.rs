@@ -9,7 +9,10 @@ use evolutionary_framework::EvolutionaryFrameworkPlugin;
 
 mod board;
 mod config;
+mod fitness;
 mod maze;
+mod objective;
+mod individual;
 
 fn main() {
     App::new()
@@ -32,6 +35,9 @@ fn main() {
             config::ConfigPlugin,
             maze::MazePlugin,
             board::BoardPlugin,
+            objective::ObjectivePlugin,
+            fitness::FitnessPlugin,
+            individual::IndividualPlugin,
         ))
         .add_systems(Startup, set_window_icon)
         .run();

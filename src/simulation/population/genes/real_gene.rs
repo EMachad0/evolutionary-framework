@@ -30,7 +30,13 @@ impl Chromosome for Real {
         todo!()
     }
 
-    fn mutate(&mut self, _prob: f64) {
-        todo!()
+    fn mutate(&mut self, prob: f64) {
+        let genes = self.get_mut();
+        let mut rng = thread_rng();
+        for p in genes.iter_mut() {
+            if rng.gen_bool(prob) {
+                *p = rng.gen_range(0.0..=1.0);
+            }
+        }
     }
 }
